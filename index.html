@@ -21,7 +21,8 @@
     <header>
         <div class="my-5 text-center">
             <a href="#" class="navbar-brand d-flex align-items-center m-0">
-                <img class="d-block mx-auto logo w-100 p-2" src="./assets/logo.png" alt="Logo les petits plats" width="268px">
+                <img class="d-block mx-auto logo w-100 p-2" src="./assets/logo.png" alt="Logo les petits plats"
+                    width="268px">
             </a>
         </div>
     </header>
@@ -31,23 +32,27 @@
             <form class="d-flex">
                 <input class="form-control searchBar " type="search" placeholder="Rechercher une recette"
                     aria-label="Search">
-                <button id="btn-searchBar" class="btn btn-custom-search" type="submit"><img src="./assets/search.svg" alt=""></button>
+                <button id="btn-searchBar" class="btn btn-custom-search" type="submit"><img src="./assets/search.svg"
+                        alt=""></button>
             </form>
         </section>
         <!-- tags -->
         <section id="tags" class="container d-flex">
         </section>
         <!-- filter -->
-        <section id="filters" class="container d-grid gap-2 d-sm-flex justify-content-center justify-content-md-start my-5">
+        <section id="filters"
+            class="container d-grid gap-2 d-sm-flex justify-content-center justify-content-md-start my-5">
             <div id="dropdown-input" class="dropdown">
-                <input id="input-ingredients" size="16" type="text" placeholder="Ingrédients">
-                <button class="btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients"
-                 aria-expanded="false">
-                Ingrédients
-                <img src="./assets/caret.svg" alt="">
-            </button>
+                <form id="form-ingredients" class="d-flex">
+                    <input id="input-ingredients" size="16" type="text" placeholder="Ingrédients">
+                    <button class="btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients"
+                        aria-expanded="false">
+                        Ingrédients
+                        <img src="./assets/caret.svg" alt="">
+                    </button>
+                </form>
                 <ul id="ingredients-list" class="dropdown-menu" aria-labelledby="btn-ingredients">
-                           <!-- ingredients -->
+                    <!-- ingredients -->
                 </ul>
             </div>
             <div class="dropdown">
@@ -57,7 +62,7 @@
                     <img src="./assets/caret.svg" alt="">
                 </button>
                 <ul id="appliances-list" class="dropdown-menu" aria-labelledby="btn-appliances">
-                           <!-- appliances -->
+                    <!-- appliances -->
                 </ul>
             </div>
             <div class="dropdown">
@@ -67,14 +72,13 @@
                     <img src="./assets/caret.svg" alt="">
                 </button>
                 <ul id="ustensils-list" class="dropdown-menu" aria-labelledby="btn-ustensils">
-                           <!-- ustensils -->
+                    <!-- ustensils -->
                 </ul>
             </div>
         </section>
         <!-- Recipe list -->
         <section id="recipes" class="container my-5">
-            <ul id="recipes-list"
-                class="d-flex justify-content-between flex-wrap">
+            <ul id="recipes-list" class="d-flex justify-content-between flex-wrap">
                 <!-- card -->
             </ul>
         </section>

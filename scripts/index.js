@@ -70,9 +70,9 @@ const displayIngredients = (array, type) => {
     }
 
     if (type === 'filteredIngredients') {
-        arrIngredientsFiltered = [...arrIngredients].filter(el => el.includes(array[0]))
+        // arrIngredientsFiltered = [...arrIngredients].filter(el => el.includes(array[0]))
 
-        const htmlString = arrIngredientsFiltered
+        const htmlString = array
             .map((el) => {
                 return `<li class="ingredient-tag">${el}</li>`
             }).join('');
@@ -108,7 +108,7 @@ const matchValue = (searchString, arr, typeArr) => {
     // console.log(tags)
     const arrTag = [];
     tags.forEach(el => arrTag.push(el.textContent))
-    console.log(arrTag)
+    // console.log(arrTag)
 
 
     function multipleExist(arr, values) {
@@ -289,8 +289,32 @@ inputIngredients.addEventListener('keyup', (e) => {
     if (currentValueSize >= 3) {
         const ingredientsArr = arrIngredients.map((el) => el)
         const filteredIngredients = matchValue(searchString, ingredientsArr, 'ingredients')
-        displayIngredients(filteredIngredients, 'filteredIngredients');
+        const sortfilteredArr = filteredIngredients.sort((a,b)=>a+b)
+        // console.log(sortfilteredArr)
+        displayIngredients(sortfilteredArr, 'filteredIngredients');
     } else {
+        displayIngredients(recipes, 'recipes');
+    }
+});
+
+inputIngredients.addEventListener('keydown', (e) => {
+    const searchStringRaw = e.target.value;
+    const searchString = cleanValue(searchStringRaw);
+    const currentValueSize = e.target.value.length;
+
+    const formIngredients = document.querySelector('#form-ingredients');
+    if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
+        e.preventDefault();
+        createTag(searchString);
+        formIngredients.reset();
+
+        btnComboboxContainer.classList.remove('container-input-show');
+        btnIngredients.classList.remove('btn-input-show');
+        btnIngredients.classList.remove('show');
+        btnIngredients.firstChild.textContent = 'Ingrédients';
+        inputIngredients.classList.remove('input-show');
+        ingredientsList.classList.remove('show');
+
         displayIngredients(recipes, 'recipes');
     }
 });
