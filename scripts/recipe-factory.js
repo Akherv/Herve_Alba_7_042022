@@ -13,14 +13,14 @@ function recipeFactory(datas) {
 
 // console.log(datas)
 
-    function getIngredient() {
-        const arrIngredients = [];
-        const ingredientItem = ingredients.map(el => {
-            arrIngredients.push(el.ingredient);
-        });
-        return arrIngredients;
-    }
-    getIngredient();
+    // function getIngredient() {
+    //     const arrIngredients = [];
+    //     const ingredientItem = ingredients.map(el => {
+    //         arrIngredients.push(el.ingredient);
+    //     });
+    //     return arrIngredients;
+    // }
+    // getIngredient();
 
 
 
@@ -96,9 +96,9 @@ function recipeFactory(datas) {
 
 
     return {
-        getIngredient,
-        getAppliance,
-        getUstensil,
+        // getIngredient,
+        // getAppliance,
+        // getUstensil,
         getArticle
     }
 
