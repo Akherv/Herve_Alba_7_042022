@@ -105,6 +105,10 @@ li {
   background-color: var(--bs-red);
 }
 
+.default {
+  background-color: #C7BEBE;
+}
+
 
 /* filter */
 

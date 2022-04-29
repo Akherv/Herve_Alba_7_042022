@@ -28,14 +28,14 @@ function createTag(searchString, type) {
             tag.classList.add('ustensil')
             break;
         default:
-            tag.classList.add('ingredient')
+            tag.classList.add('default')
             break;
     }
     tag.textContent = searchString
     tag.addEventListener('click', (e) => {
 
         tag.remove();
-        console.log(tagSection)
+        // console.log(tagSection)
         if (tagSection.children.length >= 1) {
             let val = arrSearchString.indexOf(e.target.textContent)
             arrSearchString.splice(val, 1)
@@ -132,6 +132,7 @@ const matchValue = (searchString, arr, typeArr) => {
             const recipeDescription = cleanValue(recipeDescriptionRaw);
 
             if (tags.length === 0) {
+                console.log('<-- searchbar - tags.length === 0 --->')
                 return (
                     recipeName.includes(searchString) ||
                     recipeIngredients.some(el => {
@@ -142,27 +143,50 @@ const matchValue = (searchString, arr, typeArr) => {
                     recipeDescription.includes(searchString)
                 )
             } else {
-                let tagChecker = (arr, target) => target.every(v => arr.includes(v));
-                const x = tagChecker(recipeName, arrTag)
-                console.log(x)
-                const y = tagChecker(recipeDescription, arrTag)
-                const z = recipeIngredients.some(el => {
+                console.log('<-- searchbar - tags.length > 0  --->')
+                // let tagChecker = (arr, target) => target.every(v => arr.includes(v));
+                // const x = tagChecker(recipeName, arrTag)
+                // console.log(x)
+                // const y = tagChecker(recipeDescription, arrTag)
+                // const z = recipeIngredients.some(el => {
+                //     const recipeIngredientRaw = el.ingredient;
+                //     const recipeIngredient = cleanValue(recipeIngredientRaw);
+                //     return tagChecker(recipeIngredient, arrTag);
+                // })
+
+                let arrTagsIngredientsRaw = [...tags].map(el => el.classList.contains('ingredient') ? el.textContent : '')
+                let arrTagsIngredients= arrTagsIngredientsRaw.filter(Boolean);
+                console.log(arrTagsIngredients)
+
+                const arrIngredients = recipeIngredients.map(el => {
                     const recipeIngredientRaw = el.ingredient;
                     const recipeIngredient = cleanValue(recipeIngredientRaw);
-                    return tagChecker(recipeIngredient, arrTag);
+                    return recipeIngredient;
                 })
 
+                const z = recipeIngredients.some(() => {
+                    return arrTagsIngredients.every(tag => {
+                        return arrIngredients.includes(tag)
+                    });
+                })
+
+
                 return (
-                    x
-                    // (recipeName.includes(searchString) && x) 
-                    // ||
-                    // (recipe.ingredients.some(el => {
-                    //     const recipeIngredientRaw = el.ingredient;
-                    //     const recipeIngredient = cleanValue(recipeIngredientRaw);
-                    //     return recipeIngredient.includes(searchString);
-                    // }) && z)
-                    // ||
-                    // (recipeDescription.includes(searchString) && y)
+                   ( 
+                    recipeName.includes(searchString) ||
+                    recipeIngredients.some(el => {
+                        const recipeIngredientRaw = el.ingredient;
+                        const recipeIngredient = cleanValue(recipeIngredientRaw);
+                        return recipeIngredient.includes(searchString);
+                    }) ||
+                    recipeDescription.includes(searchString)
+                   ) 
+                   &&
+                    (recipe.ingredients.some(el => {
+                        const recipeIngredientRaw = el.ingredient;
+                        const recipeIngredient = cleanValue(recipeIngredientRaw);
+                        return recipeIngredient.includes(searchString);
+                    }) && z) 
 
                 )
 
@@ -189,9 +213,23 @@ const matchValue = (searchString, arr, typeArr) => {
             const recipeDescriptionRaw = recipe.description;
             const recipeDescription = cleanValue(recipeDescriptionRaw);
 
-
+            console.log(tags.length)
             if (tags.length <= 1) {
+                console.log('<-- tagList - tags.length <= 1  --->')
+                if (tags[0].classList.contains('default')) {
+                    console.log('<-- tagList - tags.length <= 1 && tags[0].classList.contains(default)  --->')
+                    return (
+                        recipeName.includes(searchString) ||
+                        recipeIngredients.some(el => {
+                            const recipeIngredientRaw = el.ingredient;
+                            const recipeIngredient = cleanValue(recipeIngredientRaw);
+                            return recipeIngredient.includes(searchString);
+                        }) ||
+                        recipeDescription.includes(searchString)
+                    )
+                }
                 if (tags[0].classList.contains('ingredient')) {
+                    console.log('<-- tagList - tags.length <= 1 && tags[0].classList.contains(ingredient)  --->')
                     return (
                         recipeIngredients.some(el => {
                             const recipeIngredientRaw = el.ingredient;
@@ -201,7 +239,10 @@ const matchValue = (searchString, arr, typeArr) => {
                     )
                 }
             } else {
-                let arrTagsIngredients = [...tags].map(el => el.classList.contains('ingredient') ? el.textContent : '' )
+                console.log('<-- tagList - tags.length > 1  --->')
+                let arrTagsIngredientsRaw = [...tags].map(el => el.classList.contains('ingredient') ? el.textContent : '')
+                let arrTagsIngredients= arrTagsIngredientsRaw.filter(Boolean);
+                console.log(arrTagsIngredients)
 
                 const arrIngredients = recipeIngredients.map(el => {
                     const recipeIngredientRaw = el.ingredient;
@@ -209,55 +250,53 @@ const matchValue = (searchString, arr, typeArr) => {
                     return recipeIngredient;
                 })
 
-                return (
-                    recipeIngredients.some(() => {
-                       return arrTagsIngredients.every(tag => {
-                           return arrIngredients.includes(tag)
+                if ([...tags].some(el => el.classList.contains('ingredient'))) {
+                    console.log('<-- tagList - tags.length >1 && tags some el.classList.contains(ingredient)  --->')
+                    return (
+                        recipeIngredients.some(() => {
+                            // console.log(arrTagsIngredients)
+                            return arrTagsIngredients.every(tag => {
+                                return arrIngredients.includes(tag)
+                            });
+                        })
+                    )
+                } else {
+                    console.log('<-- tagList - tags.length >1 && tags other  --->')
+                    let tagChecker = (arr, target) => target.every(v => arr.includes(v));
+                    const x = tagChecker(recipeName, arrTag)
+                    console.log(x)
+                    const y = tagChecker(recipeDescription, arrTag)
+
+                    let arrTagsIngredientsRaw = [...tags].map(el => el.classList.contains('ingredient') ? el.textContent : '')
+                    let arrTagsIngredients= arrTagsIngredientsRaw.filter(Boolean);
+                    console.log(arrTagsIngredients)
+
+                    const arrIngredients = recipeIngredients.map(el => {
+                        const recipeIngredientRaw = el.ingredient;
+                        const recipeIngredient = cleanValue(recipeIngredientRaw);
+                        return recipeIngredient;
+                    })
+
+                    const z = recipeIngredients.some(() => {
+                        return arrTagsIngredients.every(tag => {
+                            return arrIngredients.includes(tag)
                         });
                     })
-                )
 
-                // let tagChecker = (arr, target) => target.every(v => 
-                // {console.log(target)
-                //     console.log(v)
-                //     console.log(arr)
-                //     arr.includes(target)
-                // });
-                // const x = tagChecker(recipeName, arrTag)
-                // const y = tagChecker(recipeDescription, arrTag)
-                // const z =  recipeIngredients.map(el => {
-                //     const recipeIngredientRaw = el.ingredient;
-                //      const recipeIngredient = cleanValue(recipeIngredientRaw);
-                //     return tagChecker(recipeIngredient, arrTag);
 
-                // })
-                // console.log(z)
+                    return (
+                        (recipeName.includes(searchString) && x) ||
+                        (recipe.ingredients.some(el => {
+                            const recipeIngredientRaw = el.ingredient;
+                            const recipeIngredient = cleanValue(recipeIngredientRaw);
+                            return recipeIngredient.includes(searchString);
+                        }) && z) ||
+                        (recipeDescription.includes(searchString) && y)
 
-                // return (
-                // z
-                //(recipeName.includes(searchString) && x) 
-                //||
-                // (recipeIngredients.filter(el => {
-                //      const recipeIngredientRaw = el.ingredient;
-                //      const recipeIngredient = cleanValue(recipeIngredientRaw);
-                //     return arrTag.map(elt=>elt.includes(recipeIngredient))
-                //     return recipeIngredient.includes(searchString);
-                // })
-                // && z)
-                // (recipeDescription.includes(searchString) && y)
-                // ))
+                    )
+
+                }
             }
-            // else {
-            //     return tags.forEach(el => {
-            //         console.log(el.textContent)
-            //         console.log(searchString)
-            //         return (
-            //         recipeName.includes(el.textContent) 
-            //         // && 
-            //         // recipeName.includes(searchString)
-            //         )
-            //     }) 
-            // }
         })
     }
 
@@ -339,7 +378,8 @@ inputIngredients.addEventListener('keydown', (e) => {
     const formIngredients = document.querySelector('#form-ingredients');
     if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
         e.preventDefault();
-        createTag(searchString);
+        // createTag(searchString);
+        createTag(searchString, 'ingredient')
         formIngredients.reset();
 
         btnComboboxContainer.classList.remove('container-input-show');
