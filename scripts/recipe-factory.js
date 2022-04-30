@@ -11,27 +11,13 @@ function recipeFactory(datas) {
         ustensils
     } = datas;
 
-// console.log(datas)
-
-    // function getIngredient() {
-    //     const arrIngredients = [];
-    //     const ingredientItem = ingredients.map(el => {
-    //         arrIngredients.push(el.ingredient);
-    //     });
-    //     return arrIngredients;
-    // }
-    // getIngredient();
-
-
-
     function getAppliance() {
         return appliance;
     }
 
     function getUstensil() {
-        const arrUstensils = [];
         const ustensilItem = ustensils.map(el => {
-            arrUstensils.push(el);
+           el
         });
         return arrUstensils;
     }
@@ -62,17 +48,14 @@ function recipeFactory(datas) {
             const arrTrim = arr.map((el) => el.trim());
             const articleClean = arrTrim.join('');
 
-            const ingredientsClean = [];
-            ingredients.map(el => {
-                ingredientsClean.push(el.ingredient);
+            const ingredientsClean = ingredients.map(el => {
+            return el.ingredient
             });
 
 
-            const ustensilsClean = [];
-            ustensils.map(el => {
-                ustensilsClean.push(el);
+            const ustensilsClean = ustensils.map(el => {
+              return  el
             });
-
 
             const appliancesClean = appliance;
 
