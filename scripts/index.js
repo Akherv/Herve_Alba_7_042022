@@ -4,10 +4,14 @@ const inputIngredients = document.querySelector('#input-ingredients');
 const btnIngredients = document.querySelector('#btn-ingredients');
 const ingredientsList = document.querySelector('#ingredients-list');
 const tagIngredients = document.querySelectorAll('.ingredient-tag');
+const appliancesList = document.querySelector('#appliances-list');
+const ustensilsList = document.querySelector('#ustensils-list');
 const recipesList = document.querySelector('#recipes-list');
 
 let arrSearchString = [];
 let arrIngredients = [];
+let arrAppliances = [];
+let arrUstensils = [];
 const cleanValue = (value) => {
     return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
@@ -61,8 +65,7 @@ const displayIngredients = (array, type) => {
     if (type === 'recipes') {
         let resTot = array.flatMap((recipe) => {
             const res = recipe.ingredients.map(el => {
-                const ingredientsRaw = el.ingredient;
-                const ingredients = cleanValue(ingredientsRaw);
+                const ingredients = cleanValue(el.ingredient);
                 return ingredients
             });
             let res2 = [...[], ...res]
@@ -96,6 +99,76 @@ const displayIngredients = (array, type) => {
     }));
 }
 
+const displayAppliances = (array, type) => {
+    if (type === 'recipes') {
+        let resTot = array.flatMap((recipe) => {
+            return cleanValue(recipe.appliance);
+        });
+        arrAppliances = [...new Set(resTot)].sort();
+
+        const htmlString = arrAppliances
+            .map((el) => {
+                return `<li class="appliance-tag">${el}</li>`
+            }).join('');
+
+        appliancesList.innerHTML = htmlString;
+    }
+
+    // if (type === 'filteredAppliances') {
+
+    //     const htmlString = array
+    //         .map((el) => {
+    //             return `<li class="appliance-tag">${el}</li>`
+    //         }).join('');
+
+    //     appliancesList.innerHTML = htmlString;
+    // }
+
+    const appliancesItem = document.querySelectorAll('.appliance-tag');
+    appliancesItem.forEach((el) => el.addEventListener('click', () => {
+        createTag(el.textContent, 'appliance')
+    }));
+
+}
+
+const displayUstensils = (array, type) => {
+    if (type === 'recipes') {
+        let resTot = array.flatMap((recipe) => {
+            const res = recipe.ustensils.map(el => {
+                const ustensils = cleanValue(el);
+                return ustensils
+            });
+            let res2 = [...[], ...res]
+            return res2
+        });
+
+        arrUstensils = [...new Set(resTot)].sort();
+
+        const htmlString = arrUstensils
+            .map((el) => {
+                return `<li class="ustensil-tag">${el}</li>`
+            }).join('');
+
+        ustensilsList.innerHTML = htmlString;
+    }
+
+    // if (type === 'filteredUstensils') {
+
+    //     const htmlString = array
+    //         .map((el) => {
+    //             return `<li class="ustensil-tag">${el}</li>`
+    //         }).join('');
+
+    //     ustensilsList.innerHTML = htmlString;
+    // }
+
+    const ustensilsItem = document.querySelectorAll('.ustensil-tag');
+    ustensilsItem.forEach((el) => el.addEventListener('click', () => {
+        createTag(el.textContent, 'ustensil')
+    }));
+
+}
+
 const displayRecipes = (filteredrecipes) => {
     const htmlString = filteredrecipes
         .map((recipe) => {
@@ -108,241 +181,287 @@ const displayRecipes = (filteredrecipes) => {
 };
 
 const matchValue = (searchString, arr, typeArr) => {
-    // console.log(searchString, arr, typeArr)
-    const tags = document.querySelectorAll('.tag');
+        // console.log(searchString, arr, typeArr)
+        const tags = document.querySelectorAll('.tag');
 
-    if (typeArr === 'recipes') {
-        return arr.filter((recipe) => {
-            const recipeNameRaw = recipe.name;
-            const recipeName = cleanValue(recipeNameRaw);
-            const recipeIngredients = recipe.ingredients;
-            const recipeDescriptionRaw = recipe.description;
-            const recipeDescription = cleanValue(recipeDescriptionRaw);
+        if (typeArr === 'recipes') {
+            return arr.filter((recipe) => {
+                    const recipeNameRaw = recipe.name;
+                    const recipeName = cleanValue(recipeNameRaw);
+                    const recipeIngredients = recipe.ingredients;
+                    const recipeApplianceRaw = recipe.appliance;
+                    const recipeAppliance = cleanValue(recipeApplianceRaw);
+                    const recipeUstensils = recipe.ustensils;
+                    const recipeDescriptionRaw = recipe.description;
+                    const recipeDescription = cleanValue(recipeDescriptionRaw);
+                    // console.log(recipeUstensils,recipeAppliance)
 
-            //conditions
-            const searchBarConditions = () => {
-                return (
-                    recipeName.includes(searchString) ||
-                    recipeIngredients.some(el => {
-                        const recipeIngredientRaw = el.ingredient;
-                        const recipeIngredient = cleanValue(recipeIngredientRaw);
-                        return recipeIngredient.includes(searchString);
-                    }) ||
-                    recipeDescription.includes(searchString)
-                )
-            }
-
-            const tagsConditions = () => {
-                //creation
-                class Tags {
-                    constructor(type, name) {
-                        this.type = type;
-                        this.name = name;
+                    //conditions
+                    const searchBarConditions = () => {
+                        return (
+                            recipeName.includes(searchString) ||
+                            recipeIngredients.some(el => {
+                                const recipeIngredientRaw = el.ingredient;
+                                const recipeIngredient = cleanValue(recipeIngredientRaw);
+                                return recipeIngredient.includes(searchString);
+                            }) ||
+                            recipeDescription.includes(searchString)
+                        )
                     }
-                }
-                const arrTag = [...tags].map(el => {
-                    const type = el.classList[1];
-                    return new Tags(type, el.textContent)
-                })
 
-                const arrTagDefault = arrTag.map(el => {
-                    if (el.type === 'default') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                const arrTagIngredients = arrTag.map(el => {
-                    if (el.type === 'ingredient') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                //conditions
-                const arrTagDefaultCondition = () => {
-                    return searchBarConditions()
-                }
-                const arrTagIngredientCondition = () => {
-                    const arrIngredients = recipeIngredients.map(el => {
-                        return cleanValue(el.ingredient);
-                    })
-                    const arrTagsIng = arrTag.map(el=> el.name);
-                    const arrIngredientsEl = arrIngredients.flatMap(el=>el.split(' '));
-                    const res = arrTagsIng.every(tag => arrIngredientsEl.includes(tag))
-                    if(res === true) {
-                        // console.log(recipe)
-                        return true
-                        // return recipeIngredients
-                    }
-                }
-                // console.log(arrTagIngredientCondition());
-
-                const allTagsConditions = () => {
-                    const resRaw = arrTag.map(el => el.type)
-                    const res = [...new Set(resRaw)];
-
-                    function switchType(el) {
-                        switch (el) {
-                            case 'ingredient':
-                               resultat =  arrTagIngredientCondition();
-                                break;
-                            case 'default':
-                                resultat = arrTagDefaultCondition();
-                                break;
-                            default:
-                                resultat = arrTagDefaultCondition();
-                                break;
+                    const tagsConditions = () => {
+                        //creation
+                        class Tags {
+                            constructor(type, name) {
+                                this.type = type;
+                                this.name = name;
                             }
-                            return resultat
-                    }
+                        }
+                        const arrTag = [...tags].map(el => {
+                            const type = el.classList[1];
+                            return new Tags(type, el.textContent)
+                        })
 
-                        if(res.length === 1) {
-                           return res.map(el => {
-                            return switchType(el)
-                            }).join(' ')
+                        const arrTagDefault = arrTag.map(el => {
+                            if (el.type === 'default') {
+                                return el.name;
+                            }
+                        }).filter(Boolean)
+
+                        const arrTagIngredients = arrTag.map(el => {
+                            if (el.type === 'ingredient') {
+                                return el.name;
+                            }
+                        }).filter(Boolean)
+
+                        const arrTagAppliances = arrTag.map(el => {
+                            if (el.type === 'appliance') {
+                                return el.name;
+                            }
+                        }).filter(Boolean)
+
+                        const arrTagUstensils = arrTag.map(el => {
+                            if (el.type === 'ustensil') {
+                                return el.name;
+                            }
+                        }).filter(Boolean)
+
+                        //conditions
+                        const arrTagDefaultCondition = () => {
+                            return searchBarConditions()
+                        }
+                        const arrTagIngredientCondition = () => {
+                            const arrIngredients = recipeIngredients.map(el => {
+                                return cleanValue(el.ingredient);
+                            })
+                            // const arrTagsIng = arrTag.map(el => el.name);
+                            const res = arrTagIngredients.every(tag => {
+                                const arrIngredientsEl = arrIngredients.flatMap(el => el.split(' '));
+
+                                if ((arrIngredients.includes(tag) === false) && (arrIngredientsEl.includes(tag) === true)) {
+                                    return true
+                                } else if ((arrIngredients.includes(tag) === false) && (arrIngredientsEl.includes(tag) === false)) {
+                                    return false
+                                } else {
+                                    return arrIngredients.includes(tag)
+                                }
+
+                            })
+                            if (res === true) {
+                                return true
+                            }
                         }
 
-                        if(res.length === 2) {
-                           return switchType(res[0])  && switchType(res[1]) 
+                        const arrTagApplianceCondition = () => {
+                            return arrTagAppliances.every(tag => recipeAppliance.includes(tag))
                         }
 
-                        if(res.length === 3) {
-                            return switchType(res[0])  && switchType(res[1]) && switchType(res[2]) 
+                        const arrTagUstensilCondition = () => {
+                            const arrUstensils = recipeUstensils.map(el => {
+                                return cleanValue(el);
+                            })
+                            console.log(arrUstensils)
+                            console.log(arrTagUstensils)
+
+                            const res = arrTagUstensils.every(tag => {
+                                    return arrUstensils.includes(tag)
+                            })
+                            if (res === true) {
+                                return true
+                            }
                         }
+                  
+                            const allTagsConditions = () => {
+                                const resRaw = arrTag.map(el => el.type)
+                                const res = [...new Set(resRaw)];
+                                console.log(resRaw)
+                                function switchType(el) {
+                                    switch (el) {
+                                        case 'ingredient':
+                                            resultat = arrTagIngredientCondition();
+                                            break;
+                                        case 'appliance':
+                                            resultat = arrTagApplianceCondition();
+                                            break;
+                                        case 'ustensil':
+                                            resultat = arrTagUstensilCondition();
+                                            break;
+                                        case 'default':
+                                            resultat = arrTagDefaultCondition();
+                                            break;
+                                        default:
+                                            resultat = arrTagDefaultCondition();
+                                            break;
+                                    }
+                                    return resultat
+                                }
 
-                        if(res.length === 4) {
-                            return switchType(res[0])  && switchType(res[1]) && switchType(res[2]) && switchType(res[3]) 
+                                if (res.length === 1) {
+                                    return res.map(el => {
+                                        return switchType(el)
+                                    }).join(' ')
+                                }
+
+                                if (res.length === 2) {
+                                    // console.log(res)
+                                    // console.log(switchType(res[0]))
+                                    // console.log(switchType(res[1]))
+                                    return switchType(res[0]) && switchType(res[1])
+                                }
+
+                                if (res.length === 3) {
+                                    return switchType(res[0]) && switchType(res[1]) && switchType(res[2])
+                                }
+
+                                if (res.length === 4) {
+                                    return switchType(res[0]) && switchType(res[1]) && switchType(res[2]) && switchType(res[3])
+                                }
+                            }
+                            // console.log(allTagsConditions())
+                            return (
+                                allTagsConditions()
+                            )
                         }
+                        // console.log(searchBarConditions())
 
-                }
-
-                // console.log(allTagsConditions())
-
-                return (
-                //    arrTagIngredientCondition()
-                   allTagsConditions()
-                )
-
+                        if (tags.length === 0) {
+                            return (
+                                searchBarConditions()
+                            )
+                        } else {
+                            return (
+                                searchBarConditions() &&
+                                tagsConditions()
+                            )
+                        }
+                    })
             }
 
-            // console.log(searchBarConditions())
+            if (typeArr === 'ingredients') {
+                return arr.filter((ingredient) => {
+                    return (
+                        ingredient.includes(searchString)
+                    )
+                })
+            }
+        }
 
-            if (tags.length === 0) {
-                return (
-                    searchBarConditions()
-                )
+
+        // Listeners
+        searchBar.addEventListener('keyup', (e) => {
+            const searchStringRaw = e.target.value;
+            const searchString = cleanValue(searchStringRaw);
+            const currentValueSize = e.target.value.length;
+            const tags = document.querySelectorAll('.tag');
+
+            if (currentValueSize >= 3) {
+                const filteredRecipes = matchValue(searchString, recipes, 'recipes')
+                displayRecipes(filteredRecipes);
+            } else if (tags.length === 0) {
+                displayRecipes(recipes);
+            }
+
+        });
+
+        searchBar.addEventListener('keydown', (e) => {
+            const searchStringRaw = e.target.value;
+            const searchString = cleanValue(searchStringRaw);
+            const currentValueSize = e.target.value.length;
+
+            const form = document.querySelector('form');
+            if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
+                e.preventDefault();
+                createTag(searchString, 'default');
+                form.reset();
+            }
+        });
+
+
+        btnIngredients.addEventListener('click', () => {
+
+            if (btnIngredients.classList.contains('btn-input-show')) {
+                btnComboboxContainer.classList.remove('container-input-show');
+                btnIngredients.classList.remove('btn-input-show');
+                btnIngredients.classList.remove('show');
+                btnIngredients.firstChild.textContent = 'Ingrédients';
+                inputIngredients.classList.remove('input-show');
+                ingredientsList.classList.remove('show');
             } else {
-                return (
-                    // searchBarConditions() 
-                    // &&
-                     tagsConditions()
-                )
+                btnComboboxContainer.classList.add('container-input-show');
+                btnIngredients.classList.add('btn-input-show');
+                btnIngredients.classList.add('show');
+                btnIngredients.firstChild.textContent = '';
+                inputIngredients.classList.add('input-show');
+                ingredientsList.classList.add('show');
+                ingredientsList.style.top = '100%';
             }
-        })
-    }
 
-    if (typeArr === 'ingredients') {
-        return arr.filter((ingredient) => {
-            return (
-                ingredient.includes(searchString)
-            )
-        })
-    }
-}
+        });
 
+        inputIngredients.addEventListener('keyup', (e) => {
+            const searchStringRaw = e.target.value;
+            const searchString = cleanValue(searchStringRaw);
+            const currentValueSize = e.target.value.length;
 
-// Listeners
-searchBar.addEventListener('keyup', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
-    const currentValueSize = e.target.value.length;
-    const tags = document.querySelectorAll('.tag');
+            if (currentValueSize >= 3) {
+                const ingredientsArr = arrIngredients.map((el) => el)
+                const filteredIngredients = matchValue(searchString, ingredientsArr, 'ingredients')
+                const sortfilteredArr = filteredIngredients.sort((a, b) => a + b)
+                displayIngredients(sortfilteredArr, 'filteredIngredients');
+            } else {
+                displayIngredients(recipes, 'recipes');
+            }
+        });
 
-    if (currentValueSize >= 3) {
-        const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-        displayRecipes(filteredRecipes);
-    } else if (tags.length === 0) {
-        displayRecipes(recipes);
-    }
+        inputIngredients.addEventListener('keydown', (e) => {
+            const searchStringRaw = e.target.value;
+            const searchString = cleanValue(searchStringRaw);
+            const currentValueSize = e.target.value.length;
 
-});
+            const formIngredients = document.querySelector('#form-ingredients');
+            if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
+                e.preventDefault();
+                // createTag(searchString);
+                createTag(searchString, 'ingredient')
+                formIngredients.reset();
 
-searchBar.addEventListener('keydown', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
-    const currentValueSize = e.target.value.length;
+                btnComboboxContainer.classList.remove('container-input-show');
+                btnIngredients.classList.remove('btn-input-show');
+                btnIngredients.classList.remove('show');
+                btnIngredients.firstChild.textContent = 'Ingrédients';
+                inputIngredients.classList.remove('input-show');
+                ingredientsList.classList.remove('show');
 
-    const form = document.querySelector('form');
-    if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
-        e.preventDefault();
-        createTag(searchString, 'default');
-        form.reset();
-    }
-});
-
-
-btnIngredients.addEventListener('click', () => {
-
-    if (btnIngredients.classList.contains('btn-input-show')) {
-        btnComboboxContainer.classList.remove('container-input-show');
-        btnIngredients.classList.remove('btn-input-show');
-        btnIngredients.classList.remove('show');
-        btnIngredients.firstChild.textContent = 'Ingrédients';
-        inputIngredients.classList.remove('input-show');
-        ingredientsList.classList.remove('show');
-    } else {
-        btnComboboxContainer.classList.add('container-input-show');
-        btnIngredients.classList.add('btn-input-show');
-        btnIngredients.classList.add('show');
-        btnIngredients.firstChild.textContent = '';
-        inputIngredients.classList.add('input-show');
-        ingredientsList.classList.add('show');
-        ingredientsList.style.top = '100%';
-    }
-
-});
-
-inputIngredients.addEventListener('keyup', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
-    const currentValueSize = e.target.value.length;
-
-    if (currentValueSize >= 3) {
-        const ingredientsArr = arrIngredients.map((el) => el)
-        const filteredIngredients = matchValue(searchString, ingredientsArr, 'ingredients')
-        const sortfilteredArr = filteredIngredients.sort((a, b) => a + b)
-        displayIngredients(sortfilteredArr, 'filteredIngredients');
-    } else {
-        displayIngredients(recipes, 'recipes');
-    }
-});
-
-inputIngredients.addEventListener('keydown', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
-    const currentValueSize = e.target.value.length;
-
-    const formIngredients = document.querySelector('#form-ingredients');
-    if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
-        e.preventDefault();
-        // createTag(searchString);
-        createTag(searchString, 'ingredient')
-        formIngredients.reset();
-
-        btnComboboxContainer.classList.remove('container-input-show');
-        btnIngredients.classList.remove('btn-input-show');
-        btnIngredients.classList.remove('show');
-        btnIngredients.firstChild.textContent = 'Ingrédients';
-        inputIngredients.classList.remove('input-show');
-        ingredientsList.classList.remove('show');
-
-        displayIngredients(recipes, 'recipes');
-    }
-});
+                displayIngredients(recipes, 'recipes');
+            }
+        });
 
 
-// Initialisation
-function init() {
-    displayIngredients(recipes, 'recipes')
-    displayRecipes(recipes);
-};
-init();
+        // Initialisation
+        function init() {
+            displayIngredients(recipes, 'recipes')
+            displayAppliances(recipes, 'recipes');
+            displayUstensils(recipes, 'recipes');
+            displayRecipes(recipes);
+        };
+        init();
