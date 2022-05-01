@@ -8,6 +8,7 @@ const appliancesList = document.querySelector('#appliances-list');
 const ustensilsList = document.querySelector('#ustensils-list');
 const recipesList = document.querySelector('#recipes-list');
 
+let allRecipes = recipes;
 let arrSearchString = [];
 let arrIngredients = [];
 let arrAppliances = [];
@@ -15,16 +16,29 @@ let arrUstensils = [];
 let arrAllTags = [];
 
 const cleanValue = (value) => {
-    return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f\.]/g, '');
 }
+
+const singularWord = function (word, arr) {
+    if (/[a-z]*s$/.test(word)) {
+        const res = word.replace(/s$/, '')
+        if (arr.includes(res)) {
+            return res
+        } else {
+            return word
+        }
+    } else {
+        return word
+    }
+};
 
 const filterAllDropdown = (searchString) => {
 
     const filteredRecipes = matchValue(searchString, recipes, 'recipes')
 
     //filter ingredients
-    const filteredIngredientsRaw = filteredRecipes.flatMap((recipe)=> {
-       return recipe.ingredients.map((el)=> {
+    const filteredIngredientsRaw = filteredRecipes.flatMap((recipe) => {
+        return recipe.ingredients.map((el) => {
             return cleanValue(el.ingredient)
         })
     })
@@ -32,9 +46,9 @@ const filterAllDropdown = (searchString) => {
     displayIngredients(filteredIngredients, 'filteredIngredients');
 
 
-     //filter appliances
-    const filteredAppliancesRaw = filteredRecipes.flatMap((recipe)=> {
-       return  cleanValue(recipe.appliance)
+    //filter appliances
+    const filteredAppliancesRaw = filteredRecipes.flatMap((recipe) => {
+        return cleanValue(recipe.appliance)
     })
     const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
     displayAppliances(filteredAppliances, 'filteredAppliances');
@@ -86,19 +100,23 @@ function createTag(searchString, type) {
 
     arrSearchString.push(searchString);
     tagSection.appendChild(tag);
-    console.log('here3')
-    arrSearchString.map(el => {
-        displayRecipes(matchValue(el, recipes, 'recipes'))
-    })
+
+    // arrSearchString.map(el => {
+    //     displayRecipes(matchValue(el, recipes, 'recipes'))
+    // })
+
+    const filteredRecipes = matchValue(searchString, recipes, 'recipes')
+    displayRecipes(filteredRecipes);
+
 
     const formIngredients = document.querySelector('#form-ingredients');
     formIngredients.reset();
     btnComboboxContainer.classList.remove('container-input-show');
-        btnIngredients.classList.remove('btn-input-show');
-        btnIngredients.classList.remove('show');
-        btnIngredients.firstChild.textContent = 'Ingrédients';
-        inputIngredients.classList.remove('input-show');
-        ingredientsList.classList.remove('show');
+    btnIngredients.classList.remove('btn-input-show');
+    btnIngredients.classList.remove('show');
+    btnIngredients.firstChild.textContent = 'Ingrédients';
+    inputIngredients.classList.remove('input-show');
+    ingredientsList.classList.remove('show');
 
     filterAllDropdown(searchString)
 }
@@ -114,7 +132,10 @@ const displayIngredients = (array, type) => {
             return res2
         });
 
-        arrIngredients = [...new Set(resTot)].sort();
+
+        const result = resTot.map(el => singularWord(el, resTot))
+        arrIngredients = [...new Set(result)].sort();
+
         const htmlString = arrIngredients
             .map((el) => {
                 return `<li class="ingredient-tag">${el}</li>`
@@ -210,14 +231,19 @@ const displayUstensils = (array, type) => {
 }
 
 const displayRecipes = (filteredrecipes) => {
-    const htmlString = filteredrecipes
-        .map((recipe) => {
-            const cards = recipeFactory(recipe).getArticle();
-            const recipeCard = cards.article;
-            return recipeCard
-        })
-        .join('');
-    recipesList.innerHTML = htmlString;
+    if (filteredrecipes.length > 0) {
+        const htmlString = filteredrecipes
+            .map((recipe) => {
+                const cards = recipeFactory(recipe).getArticle();
+                const recipeCard = cards.article;
+                return recipeCard
+            })
+            .join('');
+        recipesList.innerHTML = htmlString;
+    } else {
+        recipesList.innerHTML = `<li class="no-match">No match</li>`;
+    }
+
 };
 
 const matchValue = (searchString, arr, typeArr) => {
@@ -235,19 +261,33 @@ const matchValue = (searchString, arr, typeArr) => {
             const recipeUstensils = recipe.ustensils;
             const recipeDescriptionRaw = recipe.description;
             const recipeDescription = cleanValue(recipeDescriptionRaw);
-            // console.log(recipeUstensils,recipeAppliance)
+
 
             //conditions
-            const searchBarConditions = () => {
-                return (
-                    recipeName.includes(searchString) ||
-                    recipeIngredients.some(el => {
-                        const recipeIngredientRaw = el.ingredient;
-                        const recipeIngredient = cleanValue(recipeIngredientRaw);
-                        return recipeIngredient.includes(searchString);
-                    }) ||
-                    recipeDescription.includes(searchString)
-                )
+            const searchBarConditions = (tag) => {
+
+                if (tag) {
+                    return (
+                        recipeName.includes(tag) ||
+                        recipeIngredients.some(el => {
+                            const recipeIngredientRaw = el.ingredient;
+                            const recipeIngredient = cleanValue(recipeIngredientRaw);
+                            return recipeIngredient.includes(tag);
+                        }) ||
+                        recipeDescription.includes(tag)
+                    )
+                } else {
+                    return (
+                        recipeName.includes(searchString) ||
+                        recipeIngredients.some(el => {
+                            const recipeIngredientRaw = el.ingredient;
+                            const recipeIngredient = cleanValue(recipeIngredientRaw);
+                            return recipeIngredient.includes(searchString);
+                        }) ||
+                        recipeDescription.includes(searchString)
+                    )
+                }
+
             }
 
             const tagsConditions = () => {
@@ -262,6 +302,7 @@ const matchValue = (searchString, arr, typeArr) => {
                     const type = el.classList[1];
                     return new Tags(type, el.textContent)
                 })
+                arrAllTags = arrTag;
 
                 const arrTagDefault = arrTag.map(el => {
                     if (el.type === 'default') {
@@ -289,7 +330,26 @@ const matchValue = (searchString, arr, typeArr) => {
 
                 //conditions/////////////////////////////////////
                 const arrTagDefaultCondition = () => {
-                    return searchBarConditions()
+                    // if (arrTagDefault.length >= 1) {
+                    //     const arrTagDefaultItems = arrTagDefault.map(el => {
+                    //         return cleanValue(el);
+                    //     })
+
+                    //     const res = arrTagDefaultItems.some(el => {
+                    //             if (searchBarConditions(el) === false) {
+                    //                 return false
+                    //             } else {
+                    //                 console.log(el,searchBarConditions(el),recipe)
+                    //                 return true
+                    //             }
+                    //         })
+                    //         console.log(res)
+                    //     return recipe
+                    // } else {
+                    //     return searchBarConditions()
+                    // }
+                  return  searchBarConditions()
+                    
                 }
                 const arrTagIngredientCondition = () => {
                     const arrIngredients = recipeIngredients.map(el => {
@@ -391,7 +451,7 @@ const matchValue = (searchString, arr, typeArr) => {
                     tagsConditions()
                 )
 
-            }  else {
+            } else {
                 return (
                     searchBarConditions() &&
                     tagsConditions()
@@ -399,50 +459,6 @@ const matchValue = (searchString, arr, typeArr) => {
             }
         })
     }
-
-            // if (typeArr === 'searchBar') {
-            //     // console.log(arrAllTags)
-            //     // console.log(arrIngredients)
-            //     // console.log(searchString)
-            //     // console.log(arr)
-            //     // const ArrRecipeIngredients = recipes.map((recipe) => {
-            //     //     const recipeIngredients = recipe.ingredients;
-            //     //     recipeIngredients.map(el=>{
-                    
-            //     //         // console.log(el.ingredient);
-
-
-            //     //     })
-            
-            //     // });
-
-            //    const result = recipes.filter((recipe) => {
-            //     const recipeIngredients = recipe.ingredients;
-            //    return recipeIngredients.some(el => {
-            //         const recipeIngredientRaw = el.ingredient;
-            //         const recipeIngredient = cleanValue(recipeIngredientRaw);
-            //         return recipeIngredient
-            //     }) 
-            //     return result
-            // })
-
-            // console.log(result)
-        //             const recipeIngredients = recipe.ingredients;
-        //             const arrIngredients = recipeIngredients.map(el => {
-        //                 return cleanValue(el.ingredient);
-        //             })
-
-        //             const ingredientSearchString = arrIngredients.filter((el) => {
-        // console.log(el)
-        //             })
-
-                // return arr.filter((ingredient) => {
-                //     return (
-
-                //         ingredient.includes(searchString)
-                //     )
-                // })
-        //   }
 
     if (typeArr === 'ingredients') {
         return arr.filter((ingredient) => {
@@ -453,19 +469,28 @@ const matchValue = (searchString, arr, typeArr) => {
     }
 }
 
-
 // Listeners
 searchBar.addEventListener('keyup', (e) => {
     const searchStringRaw = e.target.value;
     const searchString = cleanValue(searchStringRaw);
     const currentValueSize = e.target.value.length;
     const tags = document.querySelectorAll('.tag');
+    // console.log(tags)
 
-    if (currentValueSize >= 3) {
+    if (currentValueSize < 3 && tags.length > 0) {
+        console.log('filter recipe with last tag') /////////////////////
+
+    } else if (currentValueSize >= 3 && tags.length === 0) {
+        console.log('3val & pas de tag')
         const filteredRecipes = matchValue(searchString, recipes, 'recipes')
         displayRecipes(filteredRecipes);
-    } else if (tags.length === 0) {
-        displayRecipes(recipes);
+    } else if (currentValueSize >= 3 && tags.length > 0) {
+        console.log('3val & tag')
+        // const filteredRecipes = matchValue(arrAllTags, recipes, 'recipes')
+        // displayRecipes(filteredRecipes);
+    } else {
+        console.log('Init')
+        displayRecipes(allRecipes);
     }
 
 });
@@ -481,29 +506,6 @@ searchBar.addEventListener('keydown', (e) => {
         createTag(searchString, 'default');
         form.reset();
     }
-
-    // const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-    // displayRecipes(filteredRecipes);
-
-//     //filter ingredients
-//     const filteredIngredientsRaw = filteredRecipes.flatMap((recipe)=> {
-//        return recipe.ingredients.map((el)=> {
-//             return cleanValue(el.ingredient)
-//         })
-//     })
-//     const filteredIngredients = [...new Set(filteredIngredientsRaw)].sort()
-//     displayIngredients(filteredIngredients, 'filteredIngredients');
-
-
-//  //filter appliances
-//   const filteredAppliancesRaw = filteredRecipes.flatMap((recipe)=> {
-//        return  cleanValue(recipe.appliance)
-//     })
-//     const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
-//     displayAppliances(filteredAppliances, 'filteredAppliances');
-
-
-
 });
 
 
@@ -542,12 +544,12 @@ inputIngredients.addEventListener('keyup', (e) => {
 
         //filter appliances
         const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-        const filteredAppliancesRaw = filteredRecipes.flatMap((recipe)=> {
-            return  cleanValue(recipe.appliance)
-            })
-            const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
-            console.log(filteredAppliances)
-            displayAppliances(filteredAppliances, 'filteredAppliances');
+        const filteredAppliancesRaw = filteredRecipes.flatMap((recipe) => {
+            return cleanValue(recipe.appliance)
+        })
+        const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
+        console.log(filteredAppliances)
+        displayAppliances(filteredAppliances, 'filteredAppliances');
     } else {
         displayIngredients(recipes, 'recipes');
         displayAppliances(recipes, 'recipes');
@@ -571,25 +573,6 @@ inputIngredients.addEventListener('keydown', (e) => {
         btnIngredients.firstChild.textContent = 'Ingrédients';
         inputIngredients.classList.remove('input-show');
         ingredientsList.classList.remove('show');
-
-       // displayIngredients(filteredIngredients, 'recipes');
-        // const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-        // const filteredIngredientsRaw = filteredRecipes.flatMap((recipe)=> {
-        //    return recipe.ingredients.map((el)=> {
-        //         return cleanValue(el.ingredient)
-        //     })
-        // })
-        // const filteredIngredients = [...new Set(filteredIngredientsRaw)].sort()
-        // displayIngredients(filteredIngredients, 'filteredIngredients');
-
-        // //filter appliances
-        // const filteredAppliancesRaw = filteredRecipes.flatMap((recipe)=> {
-        //     return  cleanValue(recipe.appliance)
-        //  })
-        //  const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
-        //  console.log(filteredAppliances)
-        //  displayAppliances(filteredAppliances, 'filteredAppliances');
-
 
     }
 });
