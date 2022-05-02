@@ -1,5 +1,9 @@
+// DOM selection
 const searchBar = document.querySelector('.searchBar');
+const form = document.querySelector('form');
+const tagSection = document.querySelector('#tags');
 const btnComboboxContainer = document.querySelector('#dropdown-input');
+const formIngredients = document.querySelector('#form-ingredients');
 const inputIngredients = document.querySelector('#input-ingredients');
 const btnIngredients = document.querySelector('#btn-ingredients');
 const ingredientsList = document.querySelector('#ingredients-list');
@@ -8,13 +12,15 @@ const appliancesList = document.querySelector('#appliances-list');
 const ustensilsList = document.querySelector('#ustensils-list');
 const recipesList = document.querySelector('#recipes-list');
 
+// arrays
 let allRecipes = recipes;
-let arrSearchString = [];
+let arrsearchValue = [];
 let arrIngredients = [];
 let arrAppliances = [];
 let arrUstensils = [];
 let arrAllTags = [];
 
+// utilities
 const cleanValue = (value) => {
     return value.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f\.]/g, '');
 }
@@ -32,9 +38,9 @@ const singularWord = function (word, arr) {
     }
 };
 
-const filterAllDropdown = (searchString) => {
+const filterAllDropdown = (searchValue) => {
 
-    const filteredRecipes = matchValue(searchString, recipes, 'recipes')
+    const filteredRecipes = matchValue(searchValue, recipes, 'recipes')
 
     //filter ingredients
     const filteredIngredientsRaw = filteredRecipes.flatMap((recipe) => {
@@ -45,18 +51,16 @@ const filterAllDropdown = (searchString) => {
     const filteredIngredients = [...new Set(filteredIngredientsRaw)].sort()
     displayIngredients(filteredIngredients, 'filteredIngredients');
 
-
     //filter appliances
     const filteredAppliancesRaw = filteredRecipes.flatMap((recipe) => {
         return cleanValue(recipe.appliance)
     })
     const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
-    displayAppliances(filteredAppliances, 'filteredAppliances');
-
+    displayAppliances(filteredAppliances, 'filteredAppliances')
 }
 
-function createTag(searchString, type) {
-    const tagSection = document.querySelector('#tags');
+// creation & display component
+const createTag = (searchValue, type) => {
     const tag = document.createElement('li');
     tag.classList.add('tag')
     switch (type) {
@@ -73,43 +77,49 @@ function createTag(searchString, type) {
             tag.classList.add('default')
             break;
     }
-    tag.textContent = searchString
-    tag.addEventListener('click', (e) => {
+    tag.textContent = searchValue
+    arrsearchValue.push(searchValue);
+    tagSection.appendChild(tag);
+
+    // structuration of the tag object
+    const tags = document.querySelectorAll('.tag');
+      class Tags {
+        constructor(type, name) {
+            this.type = type;
+            this.name = name;
+        }
+    }
+    const arrTag = [...tags].map(el => {
+        const type = el.classList[1];
+        return new Tags(type, el.textContent)
+    })
+    arrAllTags = arrTag;
+
+    // listener on remove
+     tag.addEventListener('click', (e) => {
         tag.remove();
         if (tagSection.children.length >= 1) {
-            let val = arrSearchString.indexOf(e.target.textContent)
-            arrSearchString.splice(val, 1)
-            arrSearchString.map((el) => {
+            let val = arrsearchValue.indexOf(e.target.textContent)
+            arrsearchValue.splice(val, 1)
+            arrsearchValue.map((el) => {
                 const nodeTags = document.querySelectorAll('.tag');
                 const arrActiveTags = [...nodeTags].filter(elt => elt.textContent !== el);
                 const activeTags = arrActiveTags.map(el => el.textContent);
-
+                // filterAll
                 displayRecipes(matchValue(el, recipes, 'recipes'))
-
-                filterAllDropdown(searchString)
-                console.log('here1')
+                filterAllDropdown(searchValue)
             })
+
         } else {
-            console.log('here2')
-            arrSearchString = [];
+            // reset
+            arrsearchValue = [];
             displayRecipes(recipes, 'recipes');
             displayIngredients(recipes, 'recipes')
             displayAppliances(recipes, 'recipes')
         }
     })
-
-    arrSearchString.push(searchString);
-    tagSection.appendChild(tag);
-
-    // arrSearchString.map(el => {
-    //     displayRecipes(matchValue(el, recipes, 'recipes'))
-    // })
-
-    const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-    displayRecipes(filteredRecipes);
-
-
-    const formIngredients = document.querySelector('#form-ingredients');
+    
+    // reset form
     formIngredients.reset();
     btnComboboxContainer.classList.remove('container-input-show');
     btnIngredients.classList.remove('btn-input-show');
@@ -118,42 +128,41 @@ function createTag(searchString, type) {
     inputIngredients.classList.remove('input-show');
     ingredientsList.classList.remove('show');
 
-    filterAllDropdown(searchString)
+    // filter elements
+    displayRecipes(matchValue(searchValue, recipes, 'recipes'));
+    filterAllDropdown(searchValue)
 }
 
 const displayIngredients = (array, type) => {
+
     if (type === 'recipes') {
-        let resTot = array.flatMap((recipe) => {
+        // clean values
+        let arrFirstClean = array.flatMap((recipe) => {
             const res = recipe.ingredients.map(el => {
-                const ingredients = cleanValue(el.ingredient);
-                return ingredients
+                return cleanValue(el.ingredient);
             });
-            let res2 = [...[], ...res]
-            return res2
+            return [...[], ...res]
         });
-
-
-        const result = resTot.map(el => singularWord(el, resTot))
-        arrIngredients = [...new Set(result)].sort();
-
+        const arrSecondClean = arrFirstClean.map(el => singularWord(el, arrFirstClean))
+        arrIngredients = [...new Set(arrSecondClean)].sort();
+        // create HTML component
         const htmlString = arrIngredients
             .map((el) => {
                 return `<li class="ingredient-tag">${el}</li>`
             }).join('');
-
         ingredientsList.innerHTML = htmlString;
     }
 
     if (type === 'filteredIngredients') {
-
+        // create HTML component
         const htmlString = array
             .map((el) => {
                 return `<li class="ingredient-tag">${el}</li>`
             }).join('');
-
         ingredientsList.innerHTML = htmlString;
     }
 
+     // listener create tag
     const ingredients = document.querySelectorAll('.ingredient-tag');
     ingredients.forEach((el) => el.addEventListener('click', () => {
         createTag(el.textContent, 'ingredient')
@@ -161,68 +170,66 @@ const displayIngredients = (array, type) => {
 }
 
 const displayAppliances = (array, type) => {
+
     if (type === 'recipes') {
-        let resTot = array.flatMap((recipe) => {
+        // clean values
+        let arrClean = array.flatMap((recipe) => {
             return cleanValue(recipe.appliance);
         });
-        arrAppliances = [...new Set(resTot)].sort();
-
+        arrAppliances = [...new Set(arrClean)].sort();
+        // create HTML component
         const htmlString = arrAppliances
             .map((el) => {
                 return `<li class="appliance-tag">${el}</li>`
             }).join('');
-
         appliancesList.innerHTML = htmlString;
     }
 
     if (type === 'filteredAppliances') {
-
+         // create HTML component
         const htmlString = array
             .map((el) => {
                 return `<li class="appliance-tag">${el}</li>`
             }).join('');
-
         appliancesList.innerHTML = htmlString;
     }
 
+    // listener create tag
     const appliancesItem = document.querySelectorAll('.appliance-tag');
     appliancesItem.forEach((el) => el.addEventListener('click', () => {
         createTag(el.textContent, 'appliance')
     }));
-
 }
 
 const displayUstensils = (array, type) => {
+
     if (type === 'recipes') {
-        let resTot = array.flatMap((recipe) => {
+         // clean values
+        let arrClean = array.flatMap((recipe) => {
             const res = recipe.ustensils.map(el => {
-                const ustensils = cleanValue(el);
-                return ustensils
+                return cleanValue(el);
             });
-            let res2 = [...[], ...res]
-            return res2
+            return [...[], ...res]
         });
 
-        arrUstensils = [...new Set(resTot)].sort();
-
+        arrUstensils = [...new Set(arrClean)].sort();
+        // create HTML component
         const htmlString = arrUstensils
             .map((el) => {
                 return `<li class="ustensil-tag">${el}</li>`
             }).join('');
-
         ustensilsList.innerHTML = htmlString;
     }
 
     // if (type === 'filteredUstensils') {
-
     //     const htmlString = array
     //         .map((el) => {
     //             return `<li class="ustensil-tag">${el}</li>`
     //         }).join('');
-
     //     ustensilsList.innerHTML = htmlString;
     // }
 
+    // listener create tag
     const ustensilsItem = document.querySelectorAll('.ustensil-tag');
     ustensilsItem.forEach((el) => el.addEventListener('click', () => {
         createTag(el.textContent, 'ustensil')
@@ -231,105 +238,73 @@ const displayUstensils = (array, type) => {
 }
 
 const displayRecipes = (filteredrecipes) => {
+
+    // if match create recipe
     if (filteredrecipes.length > 0) {
         const htmlString = filteredrecipes
             .map((recipe) => {
                 const cards = recipeFactory(recipe).getArticle();
-                const recipeCard = cards.article;
-                return recipeCard
+                return cards.article;
             })
             .join('');
         recipesList.innerHTML = htmlString;
     } else {
+        // no match
         recipesList.innerHTML = `<li class="no-match">No match</li>`;
     }
 
 };
 
-const matchValue = (searchString, arr, typeArr) => {
-    // console.log(searchString, arr, typeArr)
+// conditions to match
+const matchValue = (searchValue, arr, typeArr) => {
+    // DOM values
     const searchBarString = document.querySelector('.searchBar').value;
     const tags = document.querySelectorAll('.tag');
 
+    // conditions to filter recipes on recipe-list
     if (typeArr === 'recipes') {
         return arr.filter((recipe) => {
-            const recipeNameRaw = recipe.name;
-            const recipeName = cleanValue(recipeNameRaw);
+            const recipeName = cleanValue(recipe.name);
             const recipeIngredients = recipe.ingredients;
-            const recipeApplianceRaw = recipe.appliance;
-            const recipeAppliance = cleanValue(recipeApplianceRaw);
+            const recipeAppliance = cleanValue(recipe.appliance);
             const recipeUstensils = recipe.ustensils;
-            const recipeDescriptionRaw = recipe.description;
-            const recipeDescription = cleanValue(recipeDescriptionRaw);
+            const recipeDescription = cleanValue(recipe.description);
 
-
-            //conditions
+            //conditions at least 1 match in (title || ingredient || description) for searchbar values or tag default
             const searchBarConditions = (tag) => {
 
-                if (tag) {
+                if (tag) {////////////////  recipe must contains each default tag either in (title || ingredient || description) on to return true
                     return (
                         recipeName.includes(tag) ||
                         recipeIngredients.some(el => {
-                            const recipeIngredientRaw = el.ingredient;
-                            const recipeIngredient = cleanValue(recipeIngredientRaw);
+                            const recipeIngredient = cleanValue(el.ingredient);
                             return recipeIngredient.includes(tag);
                         }) ||
                         recipeDescription.includes(tag)
                     )
                 } else {
                     return (
-                        recipeName.includes(searchString) ||
+                        recipeName.includes(searchValue) ||
                         recipeIngredients.some(el => {
-                            const recipeIngredientRaw = el.ingredient;
-                            const recipeIngredient = cleanValue(recipeIngredientRaw);
-                            return recipeIngredient.includes(searchString);
+                            const recipeIngredient = cleanValue(el.ingredient);
+                            return recipeIngredient.includes(searchValue);
                         }) ||
-                        recipeDescription.includes(searchString)
+                        recipeDescription.includes(searchValue)
                     )
                 }
-
             }
 
+            //conditions () for searchbar values or tag default
             const tagsConditions = () => {
-                //creation
-                class Tags {
-                    constructor(type, name) {
-                        this.type = type;
-                        this.name = name;
-                    }
-                }
-                const arrTag = [...tags].map(el => {
-                    const type = el.classList[1];
-                    return new Tags(type, el.textContent)
-                })
-                arrAllTags = arrTag;
 
-                const arrTagDefault = arrTag.map(el => {
-                    if (el.type === 'default') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                const arrTagIngredients = arrTag.map(el => {
-                    if (el.type === 'ingredient') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                const arrTagAppliances = arrTag.map(el => {
-                    if (el.type === 'appliance') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                const arrTagUstensils = arrTag.map(el => {
-                    if (el.type === 'ustensil') {
-                        return el.name;
-                    }
-                }).filter(Boolean)
-
-                //conditions/////////////////////////////////////
+                //individuals tag conditions 
                 const arrTagDefaultCondition = () => {
+                    const arrTagDefault = arrAllTags.map(el => {
+                        if (el.type === 'default') {
+                            return el.name;
+                        }
+                    }).filter(Boolean)
+
                     // if (arrTagDefault.length >= 1) {
                     //     const arrTagDefaultItems = arrTagDefault.map(el => {
                     //         return cleanValue(el);
@@ -351,14 +326,20 @@ const matchValue = (searchString, arr, typeArr) => {
                   return  searchBarConditions()
                     
                 }
+
                 const arrTagIngredientCondition = () => {
+
+                    const arrTagIngredients = arrAllTags.map(el => {
+                        if (el.type === 'ingredient') {
+                            return el.name;
+                        }
+                    }).filter(Boolean)
                     const arrIngredients = recipeIngredients.map(el => {
                         return cleanValue(el.ingredient);
                     })
 
                     const res = arrTagIngredients.every(tag => {
                         const arrIngredientsEl = arrIngredients.flatMap(el => el.split(' '));
-
                         if ((arrIngredients.includes(tag) === false) && (arrIngredientsEl.includes(tag) === true)) {
                             return true
                         } else if ((arrIngredients.includes(tag) === false) && (arrIngredientsEl.includes(tag) === false)) {
@@ -374,16 +355,27 @@ const matchValue = (searchString, arr, typeArr) => {
                 }
 
                 const arrTagApplianceCondition = () => {
+
+                    const arrTagAppliances = arrAllTags.map(el => {
+                        if (el.type === 'appliance') {
+                            return el.name;
+                        }
+                    }).filter(Boolean)
+
                     return arrTagAppliances.every(tag => recipeAppliance.includes(tag))
                 }
 
                 const arrTagUstensilCondition = () => {
+
+                    const arrTagUstensils = arrAllTags.map(el => {
+                        if (el.type === 'ustensil') {
+                            return el.name;
+                        }
+                    }).filter(Boolean)
+
                     const arrUstensils = recipeUstensils.map(el => {
                         return cleanValue(el);
                     })
-                    console.log(arrUstensils)
-                    console.log(arrTagUstensils)
-
                     const res = arrTagUstensils.every(tag => {
                         return arrUstensils.includes(tag)
                     })
@@ -392,10 +384,13 @@ const matchValue = (searchString, arr, typeArr) => {
                     }
                 }
 
+
+                //creation of the global chain of allTagsconditions
                 const allTagsConditions = () => {
-                    const resRaw = arrTag.map(el => el.type)
+                    const resRaw = arrAllTags.map(el => el.type)
                     const res = [...new Set(resRaw)];
 
+                    // According to tag type (default || ingredient || appliance || ustensil) fire each individual condition
                     function switchType(el) {
                         switch (el) {
                             case 'ingredient':
@@ -417,6 +412,7 @@ const matchValue = (searchString, arr, typeArr) => {
                         return resultat
                     }
 
+                    // According to the number of different type, create the chaining of tag conditions
                     if (res.length === 1) {
                         return res.map(el => {
                             return switchType(el)
@@ -435,12 +431,12 @@ const matchValue = (searchString, arr, typeArr) => {
                         return switchType(res[0]) && switchType(res[1]) && switchType(res[2]) && switchType(res[3])
                     }
                 }
-
                 return (
                     allTagsConditions()
                 )
             }
 
+            // Return the final condition case (searchbarcondition || tagCondition || (or searchbarcondition && tagCondition)
             if (tags.length === 0) {
                 return (
                     searchBarConditions()
@@ -460,57 +456,58 @@ const matchValue = (searchString, arr, typeArr) => {
         })
     }
 
+    // conditions to filter ingredient input on dropdown
     if (typeArr === 'ingredients') {
         return arr.filter((ingredient) => {
             return (
-                ingredient.includes(searchString)
+                ingredient.includes(searchValue)
             )
         })
     }
 }
 
-// Listeners
+// Globals Listeners
 searchBar.addEventListener('keyup', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
+    // DOM values
+    const searchValue = cleanValue(e.target.value);
     const currentValueSize = e.target.value.length;
     const tags = document.querySelectorAll('.tag');
-    // console.log(tags)
+    const tagSize = tags.length;
 
-    if (currentValueSize < 3 && tags.length > 0) {
-        console.log('filter recipe with last tag') /////////////////////
-
-    } else if (currentValueSize >= 3 && tags.length === 0) {
+    // condition to fire the differents filters or reset filter at initialisation
+    if (currentValueSize < 3 && tagSize > 0) {
+        console.log('filter recipe with last tag')
+        // tagconditions([])
+    } else if (currentValueSize >= 3 && tagSize === 0) {
         console.log('3val & pas de tag')
-        const filteredRecipes = matchValue(searchString, recipes, 'recipes')
-        displayRecipes(filteredRecipes);
-    } else if (currentValueSize >= 3 && tags.length > 0) {
+        displayRecipes(matchValue(searchValue, recipes, 'recipes'));
+    } else if (currentValueSize >= 3 && tagSize > 0) {
         console.log('3val & tag')
-        // const filteredRecipes = matchValue(arrAllTags, recipes, 'recipes')
-        // displayRecipes(filteredRecipes);
+        // searchcondition(string) + tagcondition([])
     } else {
+        // reset
         console.log('Init')
         displayRecipes(allRecipes);
     }
-
 });
 
 searchBar.addEventListener('keydown', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
+    // DOM values
+    const searchValueRaw = e.target.value;
+    const searchValue = cleanValue(searchValueRaw);
     const currentValueSize = e.target.value.length;
 
-    const form = document.querySelector('form');
+    // condition to fire the tag creation / reset input / filterAll
     if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
         e.preventDefault();
-        createTag(searchString, 'default');
+        createTag(searchValue, 'default');
         form.reset();
+        // filterAll/////////////////
     }
 });
 
-
 btnIngredients.addEventListener('click', () => {
-
+    // creation of the style of custom dropdow ingredient
     if (btnIngredients.classList.contains('btn-input-show')) {
         btnComboboxContainer.classList.remove('container-input-show');
         btnIngredients.classList.remove('btn-input-show');
@@ -531,49 +528,50 @@ btnIngredients.addEventListener('click', () => {
 });
 
 inputIngredients.addEventListener('keyup', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
+     // DOM values
+    const searchValue = cleanValue( e.target.value);
     const currentValueSize = e.target.value.length;
 
+    // condition to fire the differents filters or reset filter at initialisation
     if (currentValueSize >= 3) {
-
         const ingredientsArr = arrIngredients.map((el) => el)
-        const filteredIngredients = matchValue(searchString, ingredientsArr, 'ingredients')
+        const filteredIngredients = matchValue(searchValue, ingredientsArr, 'ingredients')
         const sortfilteredArr = filteredIngredients.sort((a, b) => a + b)
         displayIngredients(sortfilteredArr, 'filteredIngredients');
 
         //filter appliances
-        const filteredRecipes = matchValue(searchString, recipes, 'recipes')
+        const filteredRecipes = matchValue(searchValue, recipes, 'recipes')
         const filteredAppliancesRaw = filteredRecipes.flatMap((recipe) => {
             return cleanValue(recipe.appliance)
         })
         const filteredAppliances = [...new Set(filteredAppliancesRaw)].sort()
-        console.log(filteredAppliances)
         displayAppliances(filteredAppliances, 'filteredAppliances');
-    } else {
+    } else { // reset
         displayIngredients(recipes, 'recipes');
         displayAppliances(recipes, 'recipes');
     }
 });
 
 inputIngredients.addEventListener('keydown', (e) => {
-    const searchStringRaw = e.target.value;
-    const searchString = cleanValue(searchStringRaw);
+    // DOM values
+    const searchValue = cleanValue( e.target.value);
     const currentValueSize = e.target.value.length;
 
+    // condition to fire the tag creation / reset input / filterAll
     const formIngredients = document.querySelector('#form-ingredients');
     if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
         e.preventDefault();
-        createTag(searchString, 'ingredient')
+        createTag(searchValue, 'ingredient')
         formIngredients.reset();
+        // filterAll//////
 
+        //remove dropdown style
         btnComboboxContainer.classList.remove('container-input-show');
         btnIngredients.classList.remove('btn-input-show');
         btnIngredients.classList.remove('show');
         btnIngredients.firstChild.textContent = 'Ingrédients';
         inputIngredients.classList.remove('input-show');
         ingredientsList.classList.remove('show');
-
     }
 });
 
