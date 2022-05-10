@@ -28,24 +28,24 @@
     </header>
     <main>
         <!-- searchBar -->
-        <section id="search" class="container my-5">
+        <section id="search" class="container mt-5 mb-4">
             <form class="d-flex">
                 <input class="form-control searchBar " type="search" placeholder="Rechercher une recette"
                     aria-label="Search">
-                <button id="btn-searchBar" class="btn btn-custom-search" type="submit"><img src="./assets/search.svg"
+                <button id="btn-searchBar" class="btn btn-custom-search" type="button"><img src="./assets/search.svg"
                         alt=""></button>
             </form>
         </section>
         <!-- tags -->
-        <section id="tags" class="container d-flex">
+        <section id="tags" class="container d-flex flex-wrap mb-4">
         </section>
         <!-- filter -->
         <section id="filters"
-            class="container d-grid gap-2 d-sm-flex justify-content-center justify-content-md-start my-5">
-            <div id="dropdown-input" class="dropdown">
+            class="container d-grid gap-2 d-sm-flex justify-content-center justify-content-md-start">
+            <div id="dropdown-input-ingredients" class="dropdown dropdown-input">
                 <form id="form-ingredients" class="d-flex">
-                    <input id="input-ingredients" size="16" type="text" placeholder="Ingrédients">
-                    <button class="btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients"
+                    <input id="input-ingredients" class="input-custom" size="16" type="text" placeholder="Ingrédients">
+                    <button class="ingredients btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients"
                         aria-expanded="false">
                         Ingrédients
                         <img src="./assets/caret.svg" alt="">
@@ -55,14 +55,41 @@
                     <!-- ingredients -->
                 </ul>
             </div>
-            <div class="dropdown">
+            <div id="dropdown-input-appliances" class="dropdown dropdown-input">
+                <form id="form-appliances" class="d-flex">
+                    <input id="input-appliances" class="input-custom" size="16" type="text" placeholder="Appareils">
+                    <button class="appliances btn btn-2 btn-custom dropdown-toggle" type="button" id="btn-appliances"
+                        aria-expanded="false">
+                        Appareils
+                        <img src="./assets/caret.svg" alt="">
+                    </button>
+                </form>
+                <ul id="appliances-list" class="dropdown-menu" aria-labelledby="btn-appliances">
+                    <!-- appliances -->
+                </ul>
+            </div>
+           
+            <div id="dropdown-input-ustensils" class="dropdown dropdown-input">
+                <form id="form-ustensils" class="d-flex">
+                    <input id="input-ustensils" class="input-custom" size="16" type="text" placeholder="Ustensils">
+                    <button class="ustensils btn btn-3 btn-custom dropdown-toggle" type="button" id="btn-ustensils"
+                        aria-expanded="false">
+                        Ustensils
+                        <img src="./assets/caret.svg" alt="">
+                    </button>
+                </form>
+                <ul id="ustensils-list" class="dropdown-menu" aria-labelledby="btn-ustensils">
+                       <!-- ustensils -->
+                </ul>
+            </div>
+
+            <!-- <div class="dropdown">
                 <button class="btn btn-2 btn-custom dropdown-toggle " type="button" id="btn-appliances"
                     data-bs-toggle="dropdown" aria-expanded="false">
                     Appareils
                     <img src="./assets/caret.svg" alt="">
                 </button>
                 <ul id="appliances-list" class="dropdown-menu" aria-labelledby="btn-appliances">
-                    <!-- appliances -->
                 </ul>
             </div>
             <div class="dropdown">
@@ -72,13 +99,13 @@
                     <img src="./assets/caret.svg" alt="">
                 </button>
                 <ul id="ustensils-list" class="dropdown-menu" aria-labelledby="btn-ustensils">
-                    <!-- ustensils -->
                 </ul>
-            </div>
+            </div> -->
         </section>
+
         <!-- Recipe list -->
         <section id="recipes" class="container my-5">
-            <ul id="recipes-list" class="d-flex justify-content-between flex-wrap">
+            <ul id="recipes-list" class="row">
                 <!-- card -->
             </ul>
         </section>
@@ -87,9 +114,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
     </script>
-    <script src="./scripts/recipe-factory.js"></script>
-    <script src="./data/recipes.js"></script>
-    <script src="./scripts/index.js"></script>
+    <script type="module" src="./scripts/pages/index.js"></script>
 </body>
 
 </html>

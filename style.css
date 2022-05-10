@@ -23,6 +23,14 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
+h2 {
+  width: 70%;
+}
+
+ul {
+  padding-left: 0;
+}
+
 p,
 li {
   font-size: 14px;
@@ -112,6 +120,10 @@ li {
 
 /* filter */
 
+.btn {
+  text-transform: capitalize;
+}
+
 .btn-group {
   margin-right: 15px;
 }
@@ -130,12 +142,51 @@ li {
   width: 450px;
   height: 69px;
   border: none;
-  background-color: #3282f7;
   color: #fff;
-  border-color: var(--bs-blue);
   border-radius: 0.25rem 0 0 0.25rem;
   transition: 0.5s ease-in;
+  background-color: #3282f7;
+  border-color: var(--bs-blue);
 }
+
+#input-ingredients + .btn:focus {
+  box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
+}
+
+#input-appliances {
+  display: none;
+  padding: 1em;
+  width: 450px;
+  height: 69px;
+  border: none;
+  color: #fff;
+  border-radius: 0.25rem 0 0 0.25rem;
+  transition: 0.5s ease-in;
+  background-color:#68d9a4;
+  border-color: var(--bs-green);
+}
+
+#input-appliances + .btn:focus {
+  box-shadow: 0 0 0 .25rem rgba(104, 217, 164,0.5)!important;
+}
+
+#input-ustensils {
+  display: none;
+  padding: 1em;
+  width: 450px;
+  height: 69px;
+  border: none;
+  color: #fff;
+  border-radius: 0.25rem 0 0 0.25rem;
+  transition: 0.5s ease-in;
+  background-color:#ED6454;
+  border-color: var(--bs-red);
+}
+
+#input-ustensils + .btn:focus {
+  box-shadow: 0 0 0 .25rem rgba(237, 100, 84, 0.5)!important;
+}
+
 
 .btn-input-show {
   border: none;
@@ -152,17 +203,27 @@ li {
   border-radius: 0.25rem;
 }
 
+input {
+  box-shadow:none;
+  border: 0;
+  outline:none;
+}
+
 ::placeholder {
   color: #fff;
 }
 
-.btn-custom {
+.btn-custom{
   width: 170px;
   height: 69px;
   color: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.btn-custom.show {
+  width: 70px;
 }
 
 .btn-group {
@@ -211,7 +272,6 @@ li {
 .dropdown-menu.show li {
   color: #fff;
   padding: 0.5em;
-  width: max-content;
 }
 
 #ingredients-list {
@@ -221,10 +281,12 @@ li {
 
 #appliances-list {
   background-color: var(--bs-green);
+  width: 100%;
 }
 
 #ustensils-list {
-  background-color: var(--bs-red)
+  background-color: var(--bs-red);
+  width: 100%;
 }
 
 .ingredient-tag,
@@ -252,6 +314,10 @@ li {
   border: 0;
 }
 
+.card-body {
+  overflow: hidden;
+}
+
 .card-title {
   font-size: 1rem;
 }
@@ -263,11 +329,14 @@ li {
 
 .list-unstyled li {
   font-size: 0.75rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .card-text {
   font-size: 0.75rem;
-  -webkit-line-clamp: 7;
+  -webkit-line-clamp: 6;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -287,7 +356,7 @@ li {
 
   .list-unstyled,
   .card-text {
-    width: 50%;
+    width: 48%;
   }
 
 }

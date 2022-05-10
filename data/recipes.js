@@ -1725,3 +1725,4 @@ const recipes = [
         "ustensils":["rouleau à patisserie","fouet"]
     }
 ]
+export default recipes;
