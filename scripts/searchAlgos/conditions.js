@@ -1,11 +1,6 @@
 import { cleanValue } from '../utils/cleanValues.js'
 import { arrTagsByType } from '../factories/tag-factory.js'
 
-// global condition
-// const checkGlobalMatchConditions = (recipe, arrSearchValues) => {
-//     const res = checkIndividualConditions(recipe, arrSearchValues)
-//     return res
-// }
 
 // According to value type & check if of all values of the same type match their individual condition
 const checkIndividualConditions = (recipe, arrSearchValues) => {
@@ -19,19 +14,13 @@ const checkIndividualConditions = (recipe, arrSearchValues) => {
         appliancesCondition(arrTagsByType(arrSearchValues, 'appliance'), recipe) :
         (el.type === 'ustensil') ?
         ustensilsCondition(arrTagsByType(arrSearchValues, 'ustensil'), recipe) :
-        searchbarCondition(arrTagsByType(arrSearchValues, 'default'), recipe)
+        defaultCondition(arrTagsByType(arrSearchValues, 'default'), recipe)
     )
 
 }
 
 // check if all val of an array are included into another array
 const checkIfAllValMatch = (val, arrToCheck) => val.every(val => arrToCheck.some(el => el.includes(val)));
-
-// check if all val of an array are included into another array
-// const checkIfAllValMatchSomewhere = (val, arrToCheck) => val.map(el => {
-//     // console.log(el,val,arrToCheck.some(el=>el.includes(val)))
-//    return arrToCheck.some(el=>el.includes(val))
-// });
 
 // searchBar condition
 const searchbarCondition = (val, recipe) => {
@@ -70,13 +59,28 @@ const ustensilsCondition = (val, recipe) => {
     let currentValue = val
     let recipeUstensils = recipe.ustensils
     return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeUstensils))
-  
+}
+
+// default condition
+const defaultCondition = (val, recipe) => {
+    let currentValue = val
+    if (typeof (currentValue) === 'string') {
+        currentValue = val.split()
+    }
+    let recipeTitle = recipe.name.split()
+    let recipeDescription = recipe.description.split()
+    let recipeIngredients = recipe.ingredients.flatMap(ingredient => ingredient.ingredient)
+
+    let globalArr = [...recipeTitle,...recipeDescription,...recipeIngredients]
+
+    return (
+        checkIfAllValMatch(cleanValue(currentValue), cleanValue(globalArr))
+    )
 }
 
 export {
     checkIndividualConditions,
     checkIfAllValMatch,
     searchbarCondition,
-    ingredientsCondition,
-    // checkGlobalMatchConditions
+    ingredientsCondition
 }

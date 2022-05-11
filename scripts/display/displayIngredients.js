@@ -36,11 +36,6 @@ const displaySearchBarCheckIngredients = (filteredIngredients, arrSearchValues, 
 
 // create a tag listener which fire on click the creation of a ingredient tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes, display all Elements & close the combobox
 const attachCreateIngredientsTagListener = (arrSearchValues, arrAllRecipes) => {
-    const btnComboboxIngredientsContainer = document.querySelector('#dropdown-input');
-    const inputIngredients = document.querySelector('#input-ingredients');
-    const btnIngredients = document.querySelector('#btn-ingredients');
-    const ingredientsList = document.querySelector('#ingredients-list');
-    
     document.querySelectorAll('.ingredient-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
             const searchValue = cleanValue(e.target.textContent);

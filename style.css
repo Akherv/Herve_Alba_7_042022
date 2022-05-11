@@ -23,10 +23,6 @@ body {
   font-family: 'Lato', sans-serif;
 }
 
-h2 {
-  width: 70%;
-}
-
 ul {
   padding-left: 0;
 }
@@ -149,10 +145,6 @@ li {
   border-color: var(--bs-blue);
 }
 
-#input-ingredients + .btn:focus {
-  box-shadow: 0 0 0 .25rem rgba(13,110,253,.25);
-}
-
 #input-appliances {
   display: none;
   padding: 1em;
@@ -166,7 +158,9 @@ li {
   border-color: var(--bs-green);
 }
 
-#input-appliances + .btn:focus {
+#input-appliances.input-show,
+#input-appliances + .btn:focus,
+#input-appliances:focus-within + .btn {
   box-shadow: 0 0 0 .25rem rgba(104, 217, 164,0.5)!important;
 }
 
@@ -183,10 +177,13 @@ li {
   border-color: var(--bs-red);
 }
 
-#input-ustensils + .btn:focus {
+
+#input-ustensils + .btn, 
+#input-ustensils.input-show, 
+#input-ustensils + .btn:focus,
+#input-ustensils:focus-within + .btn{
   box-shadow: 0 0 0 .25rem rgba(237, 100, 84, 0.5)!important;
 }
-
 
 .btn-input-show {
   border: none;
@@ -274,6 +271,13 @@ input {
   padding: 0.5em;
 }
 
+
+#dropdown-input-ingredients,
+#dropdown-input-appliances,
+#dropdown-input-ustensils {
+  justify-content: center;
+}
+
 #ingredients-list {
   background-color: var(--bs-blue);
   width: 100%;
@@ -315,7 +319,12 @@ input {
 }
 
 .card-body {
+  min-height: 186px;
   overflow: hidden;
+}
+
+.card-body header {
+  height: 14%;
 }
 
 .card-title {
@@ -327,7 +336,23 @@ input {
   margin-right: 5px;
 }
 
+header span {
+ font-size: 12px;
+}
+
+.card-body div {
+  height: 60%;
+}
+
+.list-unstyled{
+  height: 20%;
+  margin-bottom: 1em;
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .list-unstyled li {
+  margin-right: 1em;
   font-size: 0.75rem;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -335,12 +360,15 @@ input {
 }
 
 .card-text {
+  height: 70% !important;
   font-size: 0.75rem;
-  -webkit-line-clamp: 6;
+  -webkit-line-clamp: 5;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+
 
 @media (min-width: 768px) {
 
@@ -354,9 +382,63 @@ input {
     height: 186px;
   }
 
+  .card-body header {
+    flex-direction: row !important;
+  }
+
+  .card-body h2 {
+    width: 70%;
+  }
+
   .list-unstyled,
   .card-text {
     width: 48%;
   }
+
+  .card-text {
+    height: 100% !important;
+   -webkit-line-clamp: 6;
+  }
+
+
+
+#form-ingredients {
+  width: 100%;
+}
+
+#input-ingredients,
+#input-appliances,
+#input-ustensils {
+  /* width: 70%; */
+}
+
+.input-show {
+  width: unset;
+}
+
+.btn-custom.show {
+  width: unset;
+}
+
+.dropdown-input.show form {
+  /* justify-content: center; */
+  width: 450px;
+}
+
+.dropdown-input {
+  /* width: fit-content!important; */
+  /* margin: auto!important; */
+}
+
+/* #dropdown-input-ingredients,
+#dropdown-input-appliances,
+#dropdown-input-ustensils {
+  margin: 0!important;
+} */
+
+/* .d-grid {
+  grid-template-columns: 1fr !important;
+} */
+
 
 }

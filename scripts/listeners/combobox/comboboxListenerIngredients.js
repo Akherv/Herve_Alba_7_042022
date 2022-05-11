@@ -22,12 +22,18 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
         const currentValueSize = e.target.value.length;
 
         if (currentValueSize >= 3) {
-            const arrAllIngredients = cleanValueArrIngredients(recipes)
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
+            const filteredIngredients = arrAllIngredients.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
+            displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
+        } else if (currentValueSize < 3 && arrSearchValues.length > 0) {
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
             const filteredIngredients = arrAllIngredients.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
             displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
         } else {
             displayIngredients(recipes)
-        } 
+        }
     });
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
@@ -46,32 +52,7 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
             comboboxToggle().closeCombobox('ingredients')
 
         }
-    });
-
-        // const onClickOutside = (e) => {
-    //     if (!e.target.className.includes(dropdown-input) && !$(event.target).parents("#foo").is("#foo")) {
-    //         btnComboboxContainer.classList.remove('container-input-show');
-    //     btnIngredients.classList.remove('btn-input-show');
-    //     btnIngredients.classList.remove('show');
-    //     btnIngredients.firstChild.textContent = 'Ingrédients';
-    //     inputIngredients.classList.remove('input-show');
-    //     ingredientsList.classList.remove('show');
-    //     }
-    //   };
-    //   window.addEventListener("click", onClickOutside);
-
-    // inputIngredients.addEventListener('click', (e) => {
-    //     if (!inputIngredients.contains(e.target) ) {
-    //     btnComboboxContainer.classList.remove('container-input-show');
-    //     btnIngredients.classList.remove('btn-input-show');
-    //     btnIngredients.classList.remove('show');
-    //     btnIngredients.firstChild.textContent = 'Ingrédients';
-    //     inputIngredients.classList.remove('input-show');
-    //     ingredientsList.classList.remove('show');
-    //     }
-    // });
-
-    
+    });    
 }
 
 

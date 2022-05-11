@@ -32,15 +32,15 @@ function recipeFactory(datas) {
 
         const article =
             `
-                <li class="article-container col-sm">
+                <li class="article-container col-md">
                     <article class="card shadow-sm p-0 border-0 mx-auto mb-5" data-id=${id}>
                             <img class="card-img-top" src="" alt=" ">
                         <div class="card-body p-0">
-                            <header class="d-flex justify-content-between align-items-center mx-3 mt-3  mb-2">
-                                <h2 class="card-title mb-0">${name}</h2>
+                            <header class="d-flex flex-column justify-content-between m-3">
+                                <h2 class="card-title mb-2">${name}</h2>
                                 <span class="fw-bolder"><img src="./assets/watch.svg" alt="" class="time">${time} mins</span>
                             </header>
-                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start card-description mx-3 mt-2">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start card-description mx-3 mt-2 mb-3">
                                     <ul class="list-unstyled">${ ingredients.map(el => {
                                     return `<li><span class="fw-bolder ingredient-item">${el.ingredient} </span>${el.quantity ? `: ${el.quantity}` : ''} ${el.unit ? el.unit : ''}</li>`
                                 }).join('')}</ul>

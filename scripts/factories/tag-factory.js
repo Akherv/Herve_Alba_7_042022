@@ -41,26 +41,26 @@ const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
     tag.addEventListener('click', (e) => {
         tag.remove();
         if (tagSection.children.length >= 0) {
-            // console.log('1')
+            console.log('1')
             arrSearchValues.map((el, idx) => {
-                // console.log('2')
+            console.log('2')
                 // console.log(cleanValue(el.name), e.target.textContent)
                 if (cleanValue(el.name) === e.target.textContent) {
-                    // console.log('3')
+                    console.log('3')
                     arrSearchValues.splice(idx, 1)
-                    // console.log(arrSearchValues)
+                    console.log(arrSearchValues)
                 }
             })
-            // console.log('4')
+            console.log('4')
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
         } else {
-            // console.log('5')
+            console.log('5')
             arrSearchValues = []
             displayAll(arrAllRecipes)
-            // console.log(arrSearchValues)
+            console.log(arrSearchValues)
         }
-        // console.log('6')
+     console.log('6')
  
     })
 }

@@ -1,10 +1,10 @@
 //Check if val is (String || Array) and return val (-accent/+lowercase/+trim)
 const cleanValue = (val) => {
     if (typeof (val) === 'string') {
-        return val.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '').replace(/\s\s+/g, ' ').toLowerCase().trim()
+        return val.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s\.])/g, '').replace(/\s\s+/g, ' ').toLowerCase().trim()
     }
     if (Array.isArray(val)) {
-        return val.map(el => el.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s])/g, '').replace(/\s\s+/g, ' ').toLowerCase().trim())
+        return val.map(el => el.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s\.])/g, '').replace(/\s\s+/g, ' ').toLowerCase().trim())
     }
 }
 
@@ -38,7 +38,7 @@ const cleanValueArrIngredients = (arrRecipeItem) => {
 // Map the array of appliance - lowercase the values, remove duplicate & finally sort the values.
 const cleanValueArrAppliances = (arrRecipeItem) => {
     let arrClean = arrRecipeItem.map((recipe) => {
-        return recipe.appliance.toLowerCase();
+        return recipe.appliance.toLowerCase().replace(/([\.])/g, '');
     });
     return [...new Set(arrClean)].sort();
 }

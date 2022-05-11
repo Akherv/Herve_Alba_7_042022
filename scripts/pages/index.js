@@ -4,7 +4,7 @@ import displayAll from '../display/displayAll.js'
 import searchBarListener from '../listeners/searchBar/searchBarListener.js'
 import comboboxListenerIngredients from '../listeners/combobox/comboboxListenerIngredients.js'
 import comboboxListenerAppliances from '../listeners/combobox/comboboxListenerAppliances.js'
-// import refreshGlobalStateListener from '../listeners/globalStateListener.js'
+import comboboxListenerUstensils from '../listeners/combobox/comboboxListenerUstensils.js'
 
 
 // arrays
@@ -18,7 +18,7 @@ function init() {
     searchBarListener(arrAllRecipes, arrSearchValues)
     comboboxListenerIngredients(recipes, arrSearchValues, arrAllRecipes)
     comboboxListenerAppliances(recipes, arrSearchValues, arrAllRecipes)
-    // refreshGlobalStateListener(arrSearchValues)
+    comboboxListenerUstensils(recipes, arrSearchValues, arrAllRecipes)
 };
 init();
 

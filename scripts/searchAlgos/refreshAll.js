@@ -9,19 +9,19 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
     if (type === 'searchBar' && searchValue.length >= 3) {
         if (arrSearchValues.length === 0) {
             arrSearchValues.push(createSearchValuesObj(searchValue, type))
-            // console.log(arrSearchValues)
+            console.log(arrSearchValues)
         } else {
             const res = arrSearchValues.some((el) => el.type.includes(type))
             if (res === true) {
                 arrSearchValues.map((el, idx) => {
                     if (el.type === 'searchBar') {
                         arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type))
-                        // console.log(arrSearchValues)
+                        console.log(arrSearchValues)
                     }
                 })
             } else {
                 arrSearchValues.push(createSearchValuesObj(searchValue, type))
-                // console.log(arrSearchValues)
+                console.log(arrSearchValues)
             }
         }
     }
@@ -31,7 +31,7 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
             arrSearchValues.map((el, idx) => {
                 if (el.type === 'searchBar') {
                     arrSearchValues.splice(idx, 1)
-                    // console.log(arrSearchValues)
+                    console.log(arrSearchValues)
                 }
             })
         }
@@ -44,16 +44,16 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
                 arrSearchValues.map((el, idx) => {
                     if (el.name === searchValue) {
                         arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type))
-                        // console.log(arrSearchValues)
+                        console.log(arrSearchValues)
                     }
                 })
             } else {
                 arrSearchValues.push(createSearchValuesObj(searchValue, type))
-                // console.log(arrSearchValues)
+                console.log(arrSearchValues)
             }
         } else {
             arrSearchValues.push(createSearchValuesObj(searchValue, type))
-            // console.log(arrSearchValues)
+            console.log(arrSearchValues)
         }
     }
 }
