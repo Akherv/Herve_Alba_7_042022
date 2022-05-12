@@ -37,20 +37,20 @@ const createTag = (searchValue, type, arrSearchValues, arrAllRecipes) => {
 // create a tag listener which remove on click the selected tag - (remove the value from the global state keeper "arrSearchValues"  - refresh the array of current Recipes & display all Elements) : reset "arrSearchValues" & display all the recipes
 const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
     const tagSection = document.querySelector('#tags');
-
+    console.log(arrSearchValues)
     tag.addEventListener('click', (e) => {
         tag.remove();
-        if (tagSection.children.length >= 0) {
+        if (tagSection.children.length > 0) {
             console.log('1')
-            arrSearchValues.map((el, idx) => {
-            console.log('2')
-                // console.log(cleanValue(el.name), e.target.textContent)
-                if (cleanValue(el.name) === e.target.textContent) {
-                    console.log('3')
-                    arrSearchValues.splice(idx, 1)
-                    console.log(arrSearchValues)
-                }
-            })
+                arrSearchValues.map((el, idx) => {
+                    console.log('2')
+                        // console.log(cleanValue(el.name), e.target.textContent)
+                        if (el.name === e.target.textContent) {
+                            console.log('3')
+                            arrSearchValues.splice(idx, 1)
+                            console.log(arrSearchValues)
+                        }
+                    })
             console.log('4')
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)

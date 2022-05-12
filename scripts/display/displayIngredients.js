@@ -38,7 +38,7 @@ const displaySearchBarCheckIngredients = (filteredIngredients, arrSearchValues, 
 const attachCreateIngredientsTagListener = (arrSearchValues, arrAllRecipes) => {
     document.querySelectorAll('.ingredient-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
-            const searchValue = cleanValue(e.target.textContent);
+            const searchValue = e.target.textContent;
             createTag(searchValue, 'ingredient', arrSearchValues, arrAllRecipes)
             refreshArrSearchValues(el.textContent, 'ingredient', arrSearchValues)
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)

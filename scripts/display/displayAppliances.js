@@ -17,7 +17,7 @@ const displayAppliances = (currentRecipes, arrSearchValues, arrAllRecipes) => {
     } else {
         appliancesList.innerHTML = `<li class="no-match">No match</li>`;
     }
-
+    console.log(typeof(arrSearchValues))
   attachCreateAppliancesTagListener(arrSearchValues, arrAllRecipes)
 }
 
@@ -39,7 +39,8 @@ const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, ar
 const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
     document.querySelectorAll('.appliance-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
-            const searchValue = cleanValue(e.target.textContent);
+            // const searchValue = cleanValue(e.target.textContent);
+            const searchValue = e.target.textContent;
             createTag(searchValue, 'appliance', arrSearchValues, arrAllRecipes)
             refreshArrSearchValues(el.textContent, 'appliance', arrSearchValues)
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)

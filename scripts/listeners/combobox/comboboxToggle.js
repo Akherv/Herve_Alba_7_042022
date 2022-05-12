@@ -13,7 +13,7 @@ const comboboxToggle = (type) => {
         btn.firstChild.textContent = '';
         input.classList.add('input-show');
         list.classList.add('show');
-        list.style.top = '100%';
+        list.style.top = '98%';
     }
 
     // remove the style of custom combobox

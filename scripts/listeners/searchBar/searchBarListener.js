@@ -8,7 +8,7 @@ import displayAll from "../../display/displayAll.js";
 const searchBarListener = (arrAllRecipes, arrSearchValues) => {
     const searchBar = document.querySelector('.searchBar');
     const searchBarBtn = document.querySelector('#btn-searchBar');
-
+    console.log(typeof(arrSearchValues))
     // input keyup listener which begins at 3 letters . If no values then display all Elements & refresh the global state " arrSearchValues" to reset it ( in case if the user remove letters) : refresh the check if there is a match between searchValue & display them
     searchBar.addEventListener('keyup', (e) => {
         const searchValue = cleanValue(e.target.value);
@@ -35,11 +35,12 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
         if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
             e.preventDefault();
             createTag(searchValue, 'default', arrSearchValues, arrAllRecipes);
+            console.log(arrSearchValues)
             refreshArrSearchValues(searchValue, 'default', arrSearchValues)
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
             document.querySelector('#search form').reset();
-        }
+        } 
     });
 
 
