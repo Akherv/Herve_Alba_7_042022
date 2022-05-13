@@ -4,6 +4,7 @@ import {displayUstensils} from './displayUstensils.js';
 import displayRecipes from './displayRecipes.js';
 
 const displayAll = (currentRecipes, arrSearchValues, arrAllRecipes) => {
+    console.log('+++ >',arrSearchValues)
     displayIngredients(currentRecipes,arrSearchValues, arrAllRecipes);
     displayAppliances(currentRecipes, arrSearchValues, arrAllRecipes);
     displayUstensils(currentRecipes, arrSearchValues, arrAllRecipes);

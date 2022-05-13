@@ -17,18 +17,33 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
     btnAppliances.addEventListener('click', comboboxToggle('appliances').toggleOpeningCombobox);
 
     // input keyup listener which begins at 3 letters & check if there is a match between searchValue & Appliance list item ? display match values : all Appliances
-    inputAppliances.addEventListener('keyup', (e) => {
+
+    const filterAppliances = (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
 
         if (currentValueSize >= 3) {
             const arrAllAppliances = cleanValueArrAppliances(recipes)
             const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
-            displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+
+            if (filteredAppliances.length > 0) {
+                displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+            } 
+            
+            // else {
+            //     console.log('-')
+            //     displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+            // inputAppliances.removeEventListener('keyup', filterAppliances)
+            // }
+
+
+           
         } else {
             displayAppliances(recipes)
         } 
-    });
+    }
+
+    inputAppliances.addEventListener('keyup', filterAppliances);
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
     inputAppliances.addEventListener('keydown', (e) => {

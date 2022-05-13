@@ -8,7 +8,7 @@ import displayAll from "../../display/displayAll.js";
 const searchBarListener = (arrAllRecipes, arrSearchValues) => {
     const searchBar = document.querySelector('.searchBar');
     const searchBarBtn = document.querySelector('#btn-searchBar');
-    console.log(typeof(arrSearchValues))
+    // console.log(typeof(arrSearchValues))
     // input keyup listener which begins at 3 letters . If no values then display all Elements & refresh the global state " arrSearchValues" to reset it ( in case if the user remove letters) : refresh the check if there is a match between searchValue & display them
     searchBar.addEventListener('keyup', (e) => {
         const searchValue = cleanValue(e.target.value);
@@ -17,9 +17,15 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
         const tagSize = tags.length;
 
         if (currentValueSize < 3 && tagSize === 0) {
+            console.log('here1')
+            console.log('- - - >',arrSearchValues)
             refreshArrSearchValues(searchValue, 'searchBar', arrSearchValues)
-            displayAll(arrAllRecipes);
+            console.log('- - - >',arrSearchValues)
+            displayAll(arrAllRecipes, arrSearchValues,arrAllRecipes);
+        } else if (currentValueSize < 3 && tagSize > 0) {
+            console.log('here2')
         } else {
+            console.log('here3')
             refreshArrSearchValues(searchValue, 'searchBar', arrSearchValues)
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
@@ -32,15 +38,20 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
 
-        if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
+        if (((e.key || e.code) === ('Enter' || 13))) {
             e.preventDefault();
+        if(currentValueSize >= 3) {
             createTag(searchValue, 'default', arrSearchValues, arrAllRecipes);
             console.log(arrSearchValues)
             refreshArrSearchValues(searchValue, 'default', arrSearchValues)
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
             document.querySelector('#search form').reset();
-        } 
+        } else {
+            searchBar.value = ''
+            arrSearchValues = []
+        }
+    }
     });
 
 
@@ -55,6 +66,9 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
             document.querySelector('#search form').reset();
+        } else {
+            searchBar.value = ''
+            arrSearchValues = []
         }
     });
 }

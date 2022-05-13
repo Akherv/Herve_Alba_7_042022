@@ -5,6 +5,7 @@ import { refreshArrSearchValues } from "../searchAlgos/refreshAll.js";
 import { refreshArrFilteredRecipes } from "../searchAlgos/refreshAll.js";
 import displayAll from "./displayAll.js";
 import comboboxToggle from "./../listeners/combobox/comboboxToggle.js";
+import comboboxListenerAppliances from "../listeners/combobox/comboboxListenerAppliances.js";
 
 // If there are recipes in the array of current recipes ? clean the appliances values, display them into the appliance list & attach a tag listener to them : display "no match"
 const displayAppliances = (currentRecipes, arrSearchValues, arrAllRecipes) => {
@@ -17,7 +18,7 @@ const displayAppliances = (currentRecipes, arrSearchValues, arrAllRecipes) => {
     } else {
         appliancesList.innerHTML = `<li class="no-match">No match</li>`;
     }
-    console.log(typeof(arrSearchValues))
+
   attachCreateAppliancesTagListener(arrSearchValues, arrAllRecipes)
 }
 
@@ -30,6 +31,8 @@ const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, ar
     appliancesList.innerHTML = htmlString;
     } else {
     appliancesList.innerHTML = `<li class="no-match">No match</li>`;
+
+    // document.querySelector('#input-appliances').removeEventListener('keyup', comboboxListenerAppliances().filterAppliances(e))
     }
 
     attachCreateAppliancesTagListener(arrSearchValues, arrAllRecipes)
@@ -37,6 +40,7 @@ const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, ar
 
 // create a tag listener which fire on click the creation of a appliance tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes & display all Elements
 const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
+    console.log('---->',arrSearchValues)
     document.querySelectorAll('.appliance-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
             // const searchValue = cleanValue(e.target.textContent);
