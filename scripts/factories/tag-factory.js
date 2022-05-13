@@ -40,6 +40,7 @@ const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
     console.log(arrSearchValues)
     tag.addEventListener('click', (e) => {
         tag.remove();
+
         if (tagSection.children.length >= 0) {
             console.log('1')
                 arrSearchValues.map((el, idx) => {
@@ -54,7 +55,9 @@ const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
             console.log('4')
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
-        } else {
+        } 
+        
+        else {
             console.log('5')
             arrSearchValues = []
             displayAll(arrAllRecipes, arrSearchValues,arrAllRecipes)

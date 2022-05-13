@@ -24,6 +24,9 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
             displayAll(arrAllRecipes, arrSearchValues,arrAllRecipes);
         } else if (currentValueSize < 3 && tagSize > 0) {
             console.log('here2')
+            refreshArrSearchValues(searchValue, 'searchBar', arrSearchValues)
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
         } else {
             console.log('here3')
             refreshArrSearchValues(searchValue, 'searchBar', arrSearchValues)
@@ -69,6 +72,9 @@ const searchBarListener = (arrAllRecipes, arrSearchValues) => {
         } else {
             searchBar.value = ''
             arrSearchValues = []
+            
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
         }
     });
 }

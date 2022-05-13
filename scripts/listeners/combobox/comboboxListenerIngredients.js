@@ -26,15 +26,44 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
             const filteredIngredients = arrAllIngredients.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
             displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
-        } else if (currentValueSize < 3 && arrSearchValues.length > 0) {
+        } 
+        else if (currentValueSize < 3 && arrSearchValues.length > 0) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
             const filteredIngredients = arrAllIngredients.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
             displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
         } else {
-            displayIngredients(recipes)
+            displayIngredients(recipes,arrSearchValues, arrAllRecipes)
         }
     });
+
+    // inputIngredients.addEventListener('blur', (e) => {
+    //     const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+    //     const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
+    //     const filteredIngredients = arrAllIngredients
+
+    //     displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
+    // });
+
+
+    const refreshListOnClickOutside = () => {
+        let insideEl = document.querySelector(`#form-ingredients`);
+        document.addEventListener('click', function (event) {
+            let isClickInside = insideEl.contains(event.target)
+            let isClickInsideChild = [...insideEl.children].forEach(child=>{
+                child.parentElement.contains(event.target)
+            });
+
+            if (!isClickInside) {
+                const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+                const arrAllIngredients = cleanValueArrIngredients(filteredRecipes)
+                const filteredIngredients = arrAllIngredients
+        
+                displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes)
+            }
+        })
+    }
+    refreshListOnClickOutside()
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
     inputIngredients.addEventListener('keydown', (e) => {

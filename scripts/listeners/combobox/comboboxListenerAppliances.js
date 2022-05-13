@@ -23,32 +23,71 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
         const currentValueSize = e.target.value.length;
 
         if (currentValueSize >= 3) {
-            const arrAllAppliances = cleanValueArrAppliances(recipes)
+            console.log('--->here')
+            ///
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
+            ///
+
             const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
 
-            if (filteredAppliances.length > 0) {
+            // if (filteredAppliances.length > 0) {
                 displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-            } 
-            
+            // } 
+            }
+            else if (currentValueSize < 3 && arrSearchValues.length > 0) {
+                console.log('--->here1')
+                    const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+                    const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
+                    const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
+                    displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+                } 
             // else {
             //     console.log('-')
             //     displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
             // inputAppliances.removeEventListener('keyup', filterAppliances)
             // }
-
-
-           
-        } else {
-            displayAppliances(recipes)
+         else {
+            console.log('--->here2')
+            displayAppliances(recipes,arrSearchValues, arrAllRecipes)
         } 
     }
-
     inputAppliances.addEventListener('keyup', filterAppliances);
+
+
+
+    // inputAppliances.addEventListener('blur', (e) => {
+    //     const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+    //     const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
+    //     const filteredAppliances = arrAllAppliances
+
+    //     displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+    // });
+
+    const refreshListOnClickOutside = () => {
+        let insideEl = document.querySelector(`#form-appliances`);
+        document.addEventListener('click', function (event) {
+            let isClickInside = insideEl.contains(event.target)
+            let isClickInsideChild = [...insideEl.children].forEach(child=>{
+                child.parentElement.contains(event.target)
+            });
+
+            if (!isClickInside) {
+                const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+                const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
+                const filteredAppliances = arrAllAppliances
+
+                displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
+            }
+        })
+    }
+    refreshListOnClickOutside()
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
     inputAppliances.addEventListener('keydown', (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
+
 
         if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
             e.preventDefault();
@@ -58,7 +97,7 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
             document.querySelector('#form-appliances').reset();
             
-           comboboxToggle().closeCombobox('appliances')
+           comboboxToggle('appliances').closeCombobox('appliances')
         }
     });
 

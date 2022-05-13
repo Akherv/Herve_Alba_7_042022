@@ -40,7 +40,7 @@ const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, ar
 
 // create a tag listener which fire on click the creation of a appliance tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes & display all Elements
 const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
-    console.log('---->',arrSearchValues)
+    // console.log('---->',arrSearchValues)
     document.querySelectorAll('.appliance-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
             // const searchValue = cleanValue(e.target.textContent);

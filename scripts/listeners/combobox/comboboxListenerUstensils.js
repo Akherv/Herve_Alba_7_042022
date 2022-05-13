@@ -4,6 +4,7 @@ import { createTag } from "../../factories/tag-factory.js";
 import { refreshArrFilteredRecipes, refreshArrSearchValues } from "../../searchAlgos/refreshAll.js";
 import displayAll from "../../display/displayAll.js";
 import comboboxToggle from "./comboboxToggle.js";
+import { arrTagsByType } from '../../factories/tag-factory.js'
 
 const comboboxListenerUstensils = (recipes, arrSearchValues, arrAllRecipes) => {
     const btnComboboxUstensilsContainer = document.querySelector('#dropdown-input-ustensils');
@@ -21,13 +22,51 @@ const comboboxListenerUstensils = (recipes, arrSearchValues, arrAllRecipes) => {
         const currentValueSize = e.target.value.length;
 
         if (currentValueSize >= 3) {
-            const arrAllUstensils = cleanValueArrUstensils(recipes)
+            ////
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            const arrAllUstensils = cleanValueArrUstensils(filteredRecipes)
+            ////
+
             const filteredUstensils = arrAllUstensils.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
             displaySearchBarCheckUstensils(filteredUstensils, arrSearchValues, arrAllRecipes)
-        } else {
-            displayUstensils(recipes)
+        } 
+        else if (currentValueSize < 3 && arrSearchValues.length > 0) {
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+            const arrAllUstensils = cleanValueArrUstensils(filteredRecipes)
+            const filteredUstensils = arrAllUstensils.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
+            displaySearchBarCheckUstensils(filteredUstensils, arrSearchValues, arrAllRecipes)
+        } 
+        else {
+            displayUstensils(recipes, arrSearchValues, arrAllRecipes)
         } 
     });
+
+    const refreshListOnClickOutside = () => {
+        let insideEl = document.querySelector(`#form-ustensils`);
+        document.addEventListener('click', function (event) {
+            let isClickInside = insideEl.contains(event.target)
+            let isClickInsideChild = [...insideEl.children].forEach(child=>{
+                child.parentElement.contains(event.target)
+            });
+
+            if (!isClickInside) {
+                const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+                const arrAllUstensils = cleanValueArrUstensils(filteredRecipes)
+                const filteredUstensils = arrAllUstensils
+        
+                displaySearchBarCheckUstensils(filteredUstensils, arrSearchValues, arrAllRecipes)
+            }
+        })
+    }
+    refreshListOnClickOutside()
+
+    // inputUstensils.addEventListener('blur', (e) => {
+    //     const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
+    //     const arrAllUstensils = cleanValueArrUstensils(filteredRecipes)
+    //     const filteredUstensils = arrAllUstensils
+
+    //     displaySearchBarCheckUstensils(filteredUstensils, arrSearchValues, arrAllRecipes)
+    // });
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
     inputUstensils.addEventListener('keydown', (e) => {
@@ -43,6 +82,7 @@ const comboboxListenerUstensils = (recipes, arrSearchValues, arrAllRecipes) => {
             document.querySelector('#form-ustensils').reset();
             
            comboboxToggle().closeCombobox('ustensils')
+
         }
     });
 

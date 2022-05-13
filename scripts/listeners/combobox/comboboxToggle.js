@@ -1,3 +1,8 @@
+import { cleanValue, cleanValueArrAppliances } from "../../utils/cleanValues.js";
+import { refreshArrFilteredRecipes, refreshArrSearchValues } from "../../searchAlgos/refreshAll.js";
+import displayAll from "../../display/displayAll.js";
+import { displaySearchBarCheckAppliances } from "../../display/displayAppliances.js";
+
 const comboboxToggle = (type) => {
 
     // create the style of custom combobox
@@ -52,8 +57,8 @@ const comboboxToggle = (type) => {
 
     const closeOnClickOutside = () => {
         let insideEl = document.querySelector(`#form-${type}`);
-
         document.addEventListener('click', function (event) {
+            const searchValue = cleanValue(event.target.value);
             let isClickInside = insideEl.contains(event.target)
             let isClickInsideChild = [...insideEl.children].forEach(child=>{
                 child.parentElement.contains(event.target)
