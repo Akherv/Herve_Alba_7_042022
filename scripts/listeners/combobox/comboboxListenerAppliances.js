@@ -1,107 +1,66 @@
-import { cleanValue, cleanValueArrAppliances } from "../../utils/cleanValues.js";
-import { displaySearchBarCheckAppliances } from "../../display/displayAppliances.js";
-import { displayAppliances } from "../../display/displayAppliances.js";
-import { createTag } from "../../factories/tag-factory.js";
-import { refreshArrFilteredRecipes, refreshArrSearchValues } from "../../searchAlgos/refreshAll.js";
-import displayAll from "../../display/displayAll.js";
-import comboboxToggle from "./comboboxToggle.js";
+import { cleanValue, cleanValueArrAppliances } from '../../utils/cleanValues.js';
+import { displaySearchBarCheckAppliances } from '../../display/displayAppliances.js';
+import { displayAppliances } from '../../display/displayAppliances.js';
+import { createTag } from '../../factories/tag-factory.js';
+import { refreshArrFilteredRecipes, refreshArrSearchValues } from '../../searchAlgos/refreshAll.js';
+import displayAll from '../../display/displayAll.js';
+import comboboxToggle from './comboboxToggle.js';
 
 const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => {
-    const btnComboboxAppliancesContainer = document.querySelector('#dropdown-input-appliances');
     const inputAppliances = document.querySelector('#input-appliances');
-    const btnIngredients = document.querySelector('#btn-ingredients');
     const btnAppliances = document.querySelector('#btn-appliances');
-    const appliancesList = document.querySelector('#appliances-list');
+    const formAppliances = document.querySelector(`#form-appliances`);
 
     // listener on click which call the function toggleOpeningCombobox which create || remove the style of custom combobox Appliance
     btnAppliances.addEventListener('click', comboboxToggle('appliances').toggleOpeningCombobox);
 
     // input keyup listener which begins at 3 letters & check if there is a match between searchValue & Appliance list item ? display match values : all Appliances
-
-    const filterAppliances = (e) => {
+    inputAppliances.addEventListener('keyup', (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
 
-        if (currentValueSize >= 3) {
-            console.log('--->here')
-            ///
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
-            const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
-            ///
+        if ((currentValueSize >= 3) || (currentValueSize < 3 && arrSearchValues.length > 0)) {
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
+            const arrAllAppliances = cleanValueArrAppliances(filteredRecipes);
+            const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)));
+            displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes);
 
-            const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
+        } else {
+            displayAppliances(recipes, arrSearchValues, arrAllRecipes);
+        }
+    });
 
-            // if (filteredAppliances.length > 0) {
-                displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-            // } 
-            }
-            else if (currentValueSize < 3 && arrSearchValues.length > 0) {
-                console.log('--->here1')
-                    const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
-                    const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
-                    const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)))
-                    displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-                } 
-            // else {
-            //     console.log('-')
-            //     displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-            // inputAppliances.removeEventListener('keyup', filterAppliances)
-            // }
-         else {
-            console.log('--->here2')
-            displayAppliances(recipes,arrSearchValues, arrAllRecipes)
-        } 
-    }
-    inputAppliances.addEventListener('keyup', filterAppliances);
+    // click global listener to refresh filtered Dropdown list if the user begin to write a search but click outside the current dropdown. Then  this reset the list with the current appliances before click event.
+    document.addEventListener('click', function (event) {
+        const isClickInside = formAppliances.contains(event.target);
 
-
-
-    // inputAppliances.addEventListener('blur', (e) => {
-    //     const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
-    //     const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
-    //     const filteredAppliances = arrAllAppliances
-
-    //     displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-    // });
-
-    const refreshListOnClickOutside = () => {
-        let insideEl = document.querySelector(`#form-appliances`);
-        document.addEventListener('click', function (event) {
-            let isClickInside = insideEl.contains(event.target)
-            let isClickInsideChild = [...insideEl.children].forEach(child=>{
-                child.parentElement.contains(event.target)
-            });
-
-            if (!isClickInside) {
-                const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
-                const arrAllAppliances = cleanValueArrAppliances(filteredRecipes)
-                const filteredAppliances = arrAllAppliances
-
-                displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes)
-            }
-        })
-    }
-    refreshListOnClickOutside()
+        [...formAppliances.children].forEach(child => {
+            child.parentElement.contains(event.target);
+        });
+        if (!isClickInside) {
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
+            const arrAllAppliances = cleanValueArrAppliances(filteredRecipes);
+            const filteredAppliances = arrAllAppliances;
+            displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes);
+        }
+    });
 
     // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
     inputAppliances.addEventListener('keydown', (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
 
-
         if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
             e.preventDefault();
-            createTag(searchValue, 'appliance', arrSearchValues, arrAllRecipes)
-            refreshArrSearchValues(searchValue, 'appliance', arrSearchValues)
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues)
-            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes)
+            createTag(searchValue, 'appliance', arrSearchValues, arrAllRecipes);
+            refreshArrSearchValues(searchValue, 'appliance', arrSearchValues);
+            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
+            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
             document.querySelector('#form-appliances').reset();
-            
-           comboboxToggle('appliances').closeCombobox('appliances')
+
+            comboboxToggle('appliances').closeCombobox('appliances');
         }
     });
-
 }
 
-
-export default comboboxListenerAppliances
+export default comboboxListenerAppliances;

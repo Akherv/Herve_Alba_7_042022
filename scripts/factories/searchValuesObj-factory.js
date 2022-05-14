@@ -19,4 +19,4 @@ const createSearchValuesObj = (searchValue, type) => {
     )
 }
 
-export default createSearchValuesObj
+export default createSearchValuesObj;

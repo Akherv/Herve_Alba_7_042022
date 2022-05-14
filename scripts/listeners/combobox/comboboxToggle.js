@@ -1,8 +1,3 @@
-import { cleanValue, cleanValueArrAppliances } from "../../utils/cleanValues.js";
-import { refreshArrFilteredRecipes, refreshArrSearchValues } from "../../searchAlgos/refreshAll.js";
-import displayAll from "../../display/displayAll.js";
-import { displaySearchBarCheckAppliances } from "../../display/displayAppliances.js";
-
 const comboboxToggle = (type) => {
 
     // create the style of custom combobox
@@ -42,30 +37,30 @@ const comboboxToggle = (type) => {
         const btn = document.querySelector(`#btn-${type}`);
 
         if (btn.classList.contains('btn-input-show')) {
-            closeCombobox(type)
+            closeCombobox(type);
         } else {
             document.querySelectorAll('.dropdown-toggle').forEach(btn => {
                 if (btn.classList.contains('btn-input-show')) {
-                    const otherType = btn.dataset.type
-                    closeCombobox(otherType)
+                    const otherType = btn.dataset.type;
+                    closeCombobox(otherType);
                 }
             });
-            openCombobox(type)
+            openCombobox(type);
         }
-        closeOnClickOutside()
+        closeOnClickOutside();
     }
 
     const closeOnClickOutside = () => {
-        let insideEl = document.querySelector(`#form-${type}`);
+        const insideEl = document.querySelector(`#form-${type}`);
+
         document.addEventListener('click', function (event) {
-            const searchValue = cleanValue(event.target.value);
-            let isClickInside = insideEl.contains(event.target)
-            let isClickInsideChild = [...insideEl.children].forEach(child=>{
-                child.parentElement.contains(event.target)
+            const isClickInside = insideEl.contains(event.target);
+            [...insideEl.children].forEach(child => {
+                child.parentElement.contains(event.target);
             });
 
             if (!isClickInside) {
-                closeCombobox(type) 
+                closeCombobox(type);
             }
         })
     }
@@ -74,9 +69,8 @@ const comboboxToggle = (type) => {
         closeCombobox,
         toggleOpeningCombobox,
         closeOnClickOutside
-    }
+    };
 
 }
 
-
-export default comboboxToggle
+export default comboboxToggle;

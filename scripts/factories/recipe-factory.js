@@ -2,19 +2,19 @@ function recipeFactory(datas) {
 
     function getIngredient() {
         return datas.map((el) => {
-            return `<li class="ingredient-tag">${el}</li>`
+            return `<li class="ingredient-tag">${el}</li>`;
         }).join('');
     }
 
     function getAppliance() {
         return datas.map((el) => {
-            return `<li class="appliance-tag">${el}</li>`
+            return `<li class="appliance-tag">${el}</li>`;
         }).join('');
     }
 
     function getUstensil() {
         return datas.map((el) => {
-            return `<li class="ustensil-tag">${el}</li>`
+            return `<li class="ustensil-tag">${el}</li>`;
         }).join('');
     }
 
@@ -22,19 +22,16 @@ function recipeFactory(datas) {
         const {
             id,
             name,
-            servings,
             ingredients,
             time,
             description,
-            appliance,
-            ustensils
         } = datas;
 
         const article =
             `
                 <li class="article-container col-md">
                     <article class="card shadow-sm p-0 border-0 mx-auto mb-5" data-id=${id}>
-                            <img class="card-img-top" src="" alt=" ">
+                            <img class="card-img-top" src="#" alt=" ">
                         <div class="card-body p-0">
                             <header class="d-flex flex-column justify-content-between m-3">
                                 <h2 class="card-title mb-2">${name}</h2>
@@ -60,14 +57,12 @@ function recipeFactory(datas) {
         return article;
     }
 
-
     return {
         getIngredient,
         getAppliance,
         getUstensil,
         getArticle
-    }
-
+    };
 }
 
-export default recipeFactory
+export default recipeFactory;
