@@ -3,8 +3,20 @@ import displayAll from '../display/displayAll.js';
 
 // filter the global state keeper "arrSearchValues" and return an array of all values of the same seeking type
 const arrTagsByType = (arrSearchValues, type) => {
-    const arrTag = arrSearchValues.filter(el => el.type === type)
-    const arrTagElName = arrTag.map(el => el.name)
+    const arrTag = [];
+    for (let i = 0; i < arrSearchValues.length; i++) {
+        const result = arrSearchValues[i].type === type;
+        if (result) {
+            arrTag.push(arrSearchValues[i]);
+        }
+    }
+
+    const arrTagElName = [];
+    for (let i = 0; i < arrTag.length; i++) {
+        const result = arrTag[i].name;
+        arrTagElName.push(result);
+    }
+
     return arrTagElName
 }
 
@@ -42,16 +54,16 @@ const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
         tag.remove();
 
         if (tagSection.children.length >= 0) {
-                arrSearchValues.map((el, idx) => {
-                        if (el.name === e.target.textContent) {
-                            arrSearchValues.splice(idx, 1);
-                        }
-                    })
+            for (let i = 0; i < arrSearchValues.length; i++) {
+                if (arrSearchValues[i].name === e.target.textContent) {
+                    arrSearchValues.splice(i, 1);
+                }
+            }
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
         } else {
             arrSearchValues = [];
-            displayAll(arrAllRecipes, arrSearchValues,arrAllRecipes);
+            displayAll(arrAllRecipes, arrSearchValues, arrAllRecipes);
         }
     })
 }

@@ -22,9 +22,14 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
         if ((currentValueSize >= 3) || (currentValueSize < 3 && arrSearchValues.length > 0)) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllAppliances = cleanValueArrAppliances(filteredRecipes);
-            const filteredAppliances = arrAllAppliances.filter(el => cleanValue(el).includes(cleanValue(searchValue)));
+            const filteredAppliances = [];
+             for (let i = 0; i < arrAllAppliances.length; i++) {
+                 const result = cleanValue(arrAllAppliances[i]).includes(cleanValue(searchValue));    
+                 if (result) {
+                    filteredAppliances.push(arrAllAppliances[i]);
+                 }
+             }
             displaySearchBarCheckAppliances(filteredAppliances, arrSearchValues, arrAllRecipes);
-
         } else {
             displayAppliances(recipes, arrSearchValues, arrAllRecipes);
         }
@@ -34,9 +39,11 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
     document.addEventListener('click', function (event) {
         const isClickInside = formAppliances.contains(event.target);
 
-        [...formAppliances.children].forEach(child => {
-            child.parentElement.contains(event.target);
-        });
+        // const formAppliancesChild = [...formAppliances.children];
+        // for (let i = 0; i < formAppliancesChild.length; i++) {
+        //   formAppliancesChild[i].parentElement.contains(event.target)
+        // }
+
         if (!isClickInside) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllAppliances = cleanValueArrAppliances(filteredRecipes);

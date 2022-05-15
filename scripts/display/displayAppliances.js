@@ -37,8 +37,10 @@ const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, ar
 
 // create a tag listener which fire on click the creation of a appliance tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes & display all Elements
 const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
-    document.querySelectorAll('.appliance-tag').forEach((el) => {
-        el.addEventListener('click', (e) => {
+    const appliancesTags = document.querySelectorAll('.appliance-tag');
+
+    for (let i = 0; i < appliancesTags.length; i++) {
+        appliancesTags[i].addEventListener('click', (e) => {
             const searchValue = e.target.textContent;
 
             createTag(searchValue, 'appliance', arrSearchValues, arrAllRecipes);
@@ -48,7 +50,7 @@ const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
 
             comboboxToggle().closeCombobox('appliances');
         })
-    });
+    }
 }
 
 export {

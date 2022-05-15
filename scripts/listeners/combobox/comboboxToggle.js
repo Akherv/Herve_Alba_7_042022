@@ -39,12 +39,13 @@ const comboboxToggle = (type) => {
         if (btn.classList.contains('btn-input-show')) {
             closeCombobox(type);
         } else {
-            document.querySelectorAll('.dropdown-toggle').forEach(btn => {
-                if (btn.classList.contains('btn-input-show')) {
-                    const otherType = btn.dataset.type;
+            const allDropdown = document.querySelectorAll('.dropdown-toggle');
+            for (let i = 0; i < allDropdown.length; i++) { 
+                if (allDropdown[i].classList.contains('btn-input-show')) {
+                    const otherType = allDropdown[i].dataset.type;
                     closeCombobox(otherType);
                 }
-            });
+            }
             openCombobox(type);
         }
         closeOnClickOutside();
@@ -55,9 +56,11 @@ const comboboxToggle = (type) => {
 
         document.addEventListener('click', function (event) {
             const isClickInside = insideEl.contains(event.target);
-            [...insideEl.children].forEach(child => {
-                child.parentElement.contains(event.target);
-            });
+         
+            // const insideElChild =  [...insideEl.children];
+            // for (let i = 0; i < insideElChild.length; i++) {
+            // insideElChild[i].parentElement.contains(event.target)
+            // }
 
             if (!isClickInside) {
                 closeCombobox(type);

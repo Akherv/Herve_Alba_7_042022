@@ -1,21 +1,30 @@
 function recipeFactory(datas) {
 
     function getIngredient() {
-        return datas.map((el) => {
-            return `<li class="ingredient-tag">${el}</li>`;
-        }).join('');
+        const arrHtmlString = [];
+        for (let i = 0; i < datas.length; i++) {
+            const result = `<li class="ingredient-tag">${datas[i]}</li>`;
+            arrHtmlString.push(result);
+        }
+        return arrHtmlString.join('');
     }
 
     function getAppliance() {
-        return datas.map((el) => {
-            return `<li class="appliance-tag">${el}</li>`;
-        }).join('');
+        const arrHtmlString = [];
+        for (let i = 0; i < datas.length; i++) {
+            const result = `<li class="appliance-tag">${datas[i]}</li>`;
+            arrHtmlString.push(result);
+        }
+        return arrHtmlString.join('');
     }
 
     function getUstensil() {
-        return datas.map((el) => {
-            return `<li class="ustensil-tag">${el}</li>`;
-        }).join('');
+        const arrHtmlString = [];
+        for (let i = 0; i < datas.length; i++) {
+            const result = `<li class="ustensil-tag">${datas[i]}</li>`;
+            arrHtmlString.push(result);
+        }
+        return arrHtmlString.join('');
     }
 
     function getArticle() {

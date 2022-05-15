@@ -22,7 +22,13 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
         if ((currentValueSize >= 3) || (currentValueSize < 3 && arrSearchValues.length > 0)) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes);
-            const filteredIngredients = arrAllIngredients.filter(el => cleanValue(el).includes(cleanValue(searchValue)));
+            const filteredIngredients = [];
+            for (let i = 0; i < arrAllIngredients.length; i++) {
+                const result = cleanValue(arrAllIngredients[i]).includes(cleanValue(searchValue));    
+                if (result) {
+                   filteredIngredients.push(arrAllIngredients[i]);
+                }
+            }
             displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes);
         } else {
             displayIngredients(recipes, arrSearchValues, arrAllRecipes);
@@ -33,9 +39,11 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
     document.addEventListener('click', function (event) {
         const isClickInside = formIngredients.contains(event.target);
 
-        [...formIngredients.children].forEach(child => {
-            child.parentElement.contains(event.target);
-        });
+        // const formIngredientsChild = [...formIngredients.children];
+        // for (let i = 0; i < formIngredientsChild.length; i++) {
+        //   formIngredientsChild[i].parentElement.contains(event.target)
+        // }
+        
         if (!isClickInside) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes);

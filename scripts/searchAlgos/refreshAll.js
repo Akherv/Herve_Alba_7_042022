@@ -13,24 +13,30 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
             if (arrSearchValues.length === 0) {
                 arrSearchValues.push(createSearchValuesObj(searchValue, type));
             } else {
-                const res = arrSearchValues.some((el) => el.type.includes(type));
+                let res;
+                for (let i = 0; i < arrSearchValues.length; i++) {
+                    if (arrSearchValues[i].type === type) {
+                        res = true;
+                        break;
+                    } 
+                }
                 if (res === true) {
-                    arrSearchValues.map((el, idx) => {
-                        if (el.type === 'searchBar') {
-                            arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type));
-                        }
-                    })
+                    for (let i = 0; i < arrSearchValues.length; i++) {
+                        if (arrSearchValues[i].type === 'searchBar') {
+                            arrSearchValues.splice(i, 1, createSearchValuesObj(searchValue, type));
+                        } 
+                    }
                 } else {
                     arrSearchValues.push(createSearchValuesObj(searchValue, type));
                 }
             }
         } else {
             if (arrSearchValues.length >= 0) {
-                arrSearchValues.map((el, idx) => {
-                    if (el.type === 'searchBar') {
-                        arrSearchValues.splice(idx, 1);
-                    }
-                });
+                for (let i = 0; i < arrSearchValues.length; i++) {
+                    if (arrSearchValues[i].type === 'searchBar') {
+                        arrSearchValues.splice(i, 1);
+                    } 
+                }
             }
         }
     }
@@ -39,14 +45,22 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
     // searchValue >= 3 & (tags > 0) => if there is a tag with the same name ? (replace this searchValObj with the current val) : (create a new searchValObj of this type)
     //                  & (tags = 0) => create a new searchValObj of this type
     if (type !== 'searchBar' && searchValue.length >= 3) {
-        const res = arrSearchValues.some((el) => el.name.includes(searchValue));
+
+        let res;
+        for (let i = 0; i < arrSearchValues.length; i++) {
+            if (arrSearchValues[i].name === searchValue) {
+                res = true;
+                break;
+            } 
+        }
+
         if (arrSearchValues.length > 0) {
             if (res === true) {
-                arrSearchValues.map((el, idx) => {
-                    if (el.name === searchValue) {
-                        arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type));
-                    }
-                })
+                for (let i = 0; i < arrSearchValues.length; i++) {
+                    if (arrSearchValues[i].name === searchValue) {
+                        arrSearchValues.splice(i, 1, createSearchValuesObj(searchValue, type));
+                    } 
+                }
             } else {
                 arrSearchValues.push(createSearchValuesObj(searchValue, type));
             }
@@ -59,13 +73,22 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
 
 // filter each recipe which match the global check of all the individuals conditions given by type of object which are in the global state "arrSearchValues" at this moment
 const refreshArrFilteredRecipes = (arrAllRecipes, arrSearchValues) => {
+
     const refreshRecipes = arrAllRecipes.filter(recipe => {
         const res = checkIndividualConditions(recipe, arrSearchValues);
-        if (res.every(el => el === true)) {
-            return recipe;
+        let result = [];
+        for (let i = 0; i < res.length; i++) {
+                if (res[i] === false) {
+                    return false;
+                } else {
+                    result.push(res[i]);
+                }
         }
+        return result;
     })
-    return refreshRecipes;
+
+
+     return refreshRecipes;
 }
 
 export {

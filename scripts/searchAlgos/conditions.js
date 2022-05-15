@@ -28,7 +28,11 @@ const searchbarCondition = (val, recipe) => {
     }
     const recipeTitle = recipe.name.split();
     const recipeDescription = recipe.description.split();
-    const recipeIngredients = recipe.ingredients.flatMap(ingredient => ingredient.ingredient);
+    const recipeIngredients = [];
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        const result = recipe.ingredients[i].ingredient;
+        recipeIngredients.push(result);
+    }
 
     return (
         checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeTitle)) ||
@@ -40,7 +44,11 @@ const searchbarCondition = (val, recipe) => {
 // ingredients condition
 const ingredientsCondition = (val, recipe) => {
     const currentValue = val;
-    const recipeIngredients = recipe.ingredients.flatMap(ingredient => ingredient.ingredient);
+    const recipeIngredients = [];
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        const result = recipe.ingredients[i].ingredient;
+        recipeIngredients.push(result);
+    }
     return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeIngredients));
 }
 
@@ -66,8 +74,11 @@ const defaultCondition = (val, recipe) => {
     }
     const recipeTitle = recipe.name.split();
     const recipeDescription = recipe.description.split();
-    const recipeIngredients = recipe.ingredients.flatMap(ingredient => ingredient.ingredient);
-
+    const recipeIngredients = [];
+    for (let i = 0; i < recipe.ingredients.length; i++) {
+        const result = recipe.ingredients[i].ingredient;
+        recipeIngredients.push(result);
+    }
     const globalArr = [...recipeTitle, ...recipeDescription, ...recipeIngredients];
 
     return (

@@ -37,18 +37,20 @@ const displaySearchBarCheckUstensils = (filteredUstensils, arrSearchValues, arrA
 
 // create a tag listener which fire on click the creation of a ustensils tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes & display all Elements
 const attachCreateUstensilsTagListener = (arrSearchValues, arrAllRecipes) => {
-    document.querySelectorAll('.ustensil-tag').forEach((el) => {
-        el.addEventListener('click', (e) => {
+    const ustensilsTags = document.querySelectorAll('.ustensil-tag');
+
+    for (let i = 0; i < ustensilsTags.length; i++) {
+        ustensilsTags[i].addEventListener('click', (e) => {
             const searchValue = e.target.textContent;
 
             createTag(searchValue, 'ustensil', arrSearchValues, arrAllRecipes);
-            refreshArrSearchValues(el.textContent, 'ustensil', arrSearchValues);
+            refreshArrSearchValues(searchValue, 'ustensil', arrSearchValues);
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
 
             comboboxToggle().closeCombobox('ustensils');
         })
-    });
+    }
 }
 
 export {
