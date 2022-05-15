@@ -17,8 +17,30 @@ const checkIndividualConditions = (recipe, arrSearchValues) => {
     );
 }
 
-// check if all val of an array are included into another array
-const checkIfAllValMatch = (val, arrToCheck) => val.every(val => arrToCheck.some(el => el.includes(val)));
+const checkIfAllValMatch = (val, arrToCheck) => {
+
+    const everyCustom = (val, someCustom, arrToCheck) => {
+        for (let i = 0; i < val.length; i ++) {
+            const value = val[i];
+            if (!someCustom(value, arrToCheck)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    const someCustom = (value, arrToCheck) => {
+        for (let i = 0; i < arrToCheck.length; i ++) {
+            const el = arrToCheck[i];
+            if (el.indexOf(value) !== -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    return everyCustom(val, someCustom, arrToCheck)
+}
 
 // searchBar condition
 const searchbarCondition = (val, recipe) => {

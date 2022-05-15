@@ -73,22 +73,14 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
 
 // filter each recipe which match the global check of all the individuals conditions given by type of object which are in the global state "arrSearchValues" at this moment
 const refreshArrFilteredRecipes = (arrAllRecipes, arrSearchValues) => {
-
-    const refreshRecipes = arrAllRecipes.filter(recipe => {
-        const res = checkIndividualConditions(recipe, arrSearchValues);
-        let result = [];
-        for (let i = 0; i < res.length; i++) {
-                if (res[i] === false) {
-                    return false;
-                } else {
-                    result.push(res[i]);
-                }
+    const refreshRecipes = [];
+        for (let i = 0; i < arrAllRecipes.length; i++) {
+        const res = checkIndividualConditions(arrAllRecipes[i], arrSearchValues);
+            if (res.indexOf(false) === -1) {
+                refreshRecipes.push(arrAllRecipes[i])
+            } 
         }
-        return result;
-    })
-
-
-     return refreshRecipes;
+    return refreshRecipes;
 }
 
 export {
