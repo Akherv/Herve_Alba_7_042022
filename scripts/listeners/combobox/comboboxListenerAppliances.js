@@ -34,9 +34,6 @@ const comboboxListenerAppliances = (recipes, arrSearchValues, arrAllRecipes) => 
     document.addEventListener('click', function (event) {
         const isClickInside = formAppliances.contains(event.target);
 
-        [...formAppliances.children].forEach(child => {
-            child.parentElement.contains(event.target);
-        });
         if (!isClickInside) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllAppliances = cleanValueArrAppliances(filteredRecipes);

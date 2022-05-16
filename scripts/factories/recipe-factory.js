@@ -38,7 +38,7 @@ function recipeFactory(datas) {
                                 <span class="fw-bolder"><img src="./assets/watch.svg" alt="" class="time">${time} min</span>
                             </header>
                             <div class="d-flex flex-column flex-md-row justify-content-between align-items-start card-description mx-3 mt-2 mb-3">
-                                    <ul class="list-unstyled">${ ingredients.map(el => {
+                                    <ul class="list-unstyled">${ingredients.map(el => {
                                     return `<li><span class="fw-bolder ingredient-item">${el.ingredient} </span>${el.quantity ? `: ${el.quantity}` : ''} ${el.unit ? 
                                         (el.unit === 'grammes'? 'g' : 
                                             (el.unit === 'cuillères à soupe'||'cuillère à soupe' ? '&nbsp;c. à s.' :

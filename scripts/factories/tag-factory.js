@@ -42,7 +42,7 @@ const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
         tag.remove();
 
         if (tagSection.children.length >= 0) {
-                arrSearchValues.map((el, idx) => {
+                arrSearchValues.forEach((el, idx) => {
                         if (el.name === e.target.textContent) {
                             arrSearchValues.splice(idx, 1);
                         }

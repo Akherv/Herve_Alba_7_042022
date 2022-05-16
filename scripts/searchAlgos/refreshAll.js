@@ -15,7 +15,7 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
             } else {
                 const res = arrSearchValues.some((el) => el.type.includes(type));
                 if (res === true) {
-                    arrSearchValues.map((el, idx) => {
+                    arrSearchValues.forEach((el, idx) => {
                         if (el.type === 'searchBar') {
                             arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type));
                         }
@@ -26,7 +26,7 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
             }
         } else {
             if (arrSearchValues.length >= 0) {
-                arrSearchValues.map((el, idx) => {
+                arrSearchValues.forEach((el, idx) => {
                     if (el.type === 'searchBar') {
                         arrSearchValues.splice(idx, 1);
                     }
@@ -42,7 +42,7 @@ const refreshArrSearchValues = (searchValue, type, arrSearchValues) => {
         const res = arrSearchValues.some((el) => el.name.includes(searchValue));
         if (arrSearchValues.length > 0) {
             if (res === true) {
-                arrSearchValues.map((el, idx) => {
+                arrSearchValues.forEach((el, idx) => {
                     if (el.name === searchValue) {
                         arrSearchValues.splice(idx, 1, createSearchValuesObj(searchValue, type));
                     }

@@ -55,10 +55,6 @@ const comboboxToggle = (type) => {
 
         document.addEventListener('click', function (event) {
             const isClickInside = insideEl.contains(event.target);
-            [...insideEl.children].forEach(child => {
-                child.parentElement.contains(event.target);
-            });
-
             if (!isClickInside) {
                 closeCombobox(type);
             }
