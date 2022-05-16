@@ -314,6 +314,10 @@ input {
 
 /* cards */
 
+#recipes-list {
+  --bs-gutter-x: 4.5rem;
+}
+
 .card {
   background-color: #E7E7E7;
 }
@@ -371,6 +375,9 @@ input {
   overflow: hidden;
 }
 
+.no-match {
+  font-size: 0.85rem;
+}
 
 @media (min-width: 330px) {
   .dropdown-menu {

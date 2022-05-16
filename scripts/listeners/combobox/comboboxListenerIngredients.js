@@ -38,11 +38,6 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
     // click global listener to refresh filtered Dropdown list if the user begin to write a search but click outside the current dropdown. Then  this reset the list with the current ingredients before click event.
     document.addEventListener('click', function (event) {
         const isClickInside = formIngredients.contains(event.target);
-
-        // const formIngredientsChild = [...formIngredients.children];
-        // for (let i = 0; i < formIngredientsChild.length; i++) {
-        //   formIngredientsChild[i].parentElement.contains(event.target)
-        // }
         
         if (!isClickInside) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);

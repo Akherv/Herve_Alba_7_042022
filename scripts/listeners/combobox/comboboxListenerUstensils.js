@@ -38,11 +38,6 @@ const comboboxListenerUstensils = (recipes, arrSearchValues, arrAllRecipes) => {
     document.addEventListener('click', function (event) {
         const isClickInside = formUstensils.contains(event.target);
 
-        // const formUstensilsChild = [...formUstensils.children];
-        // for (let i = 0; i < formUstensilsChild.length; i++) {
-        //   formUstensilsChild[i].parentElement.contains(event.target)
-        // }
-
         if (!isClickInside) {
             const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
             const arrAllUstensils = cleanValueArrUstensils(filteredRecipes);
