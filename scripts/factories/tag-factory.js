@@ -11,7 +11,7 @@ const arrTagsByType = (arrSearchValues, type) => {
 // according to the searchValue & type, check if empty || duplicate then if not, create a custom tag & then attach a remove tag listener to it
 const createTag = (searchValue, type, arrSearchValues) => {
     const tagSection = document.querySelector('#tags');
-    const duplicateName = arrSearchValues.some((el) => el.name.includes(searchValue) && el.type.includes(type));
+    const duplicate = arrSearchValues.some((el) => el.name.includes(searchValue) && el.type.includes(type));
 
     const tag = document.createElement('li');
     tag.classList.add('tag')
@@ -29,7 +29,7 @@ const createTag = (searchValue, type, arrSearchValues) => {
             tag.classList.add('default');
             break;
     }
-    if (searchValue !== '' && !duplicateName) {
+    if (searchValue !== '' && !duplicate) {
         tag.textContent = searchValue;
         tagSection.appendChild(tag);
         attachTagRemoveListener(tag, arrSearchValues);

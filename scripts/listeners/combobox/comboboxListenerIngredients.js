@@ -55,7 +55,6 @@ const comboboxListenerIngredients = (recipes, arrSearchValues) => {
                     refreshArrSearchValues(searchValue, 'ingredient', arrSearchValues);
                     const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
                     displayAll(filteredRecipes, arrSearchValues);
-                    document.querySelector('#form-ingredients').reset();
                     comboboxToggle().closeCombobox('ingredients');
                 } else {
                     inputIngredients.value = '';

@@ -55,7 +55,6 @@ const comboboxListenerUstensils = (recipes, arrSearchValues) => {
                     refreshArrSearchValues(searchValue, 'ustensil', arrSearchValues);
                     const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
                     displayAll(filteredRecipes, arrSearchValues);
-                    document.querySelector('#form-ustensils').reset();
                     comboboxToggle().closeCombobox('ustensils');
                 } else {
                     inputUstensils.value = '';
