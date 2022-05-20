@@ -1,12 +1,11 @@
 import { cleanValue, cleanValueArrIngredients } from '../../utils/cleanValues.js';
-import { displaySearchBarCheckIngredients } from '../../display/displayIngredients.js';
-import { displayIngredients } from '../../display/displayIngredients.js';
 import { createTag } from '../../factories/tag-factory.js';
 import { refreshArrFilteredRecipes, refreshArrSearchValues } from '../../searchAlgos/refreshAll.js';
+import { displayIngredients, displaySearchBarCheckIngredients } from '../../display/displayIngredients.js';
 import displayAll from '../../display/displayAll.js';
 import comboboxToggle from './comboboxToggle.js';
 
-const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) => {
+const comboboxListenerIngredients = (recipes, arrSearchValues) => {
     const inputIngredients = document.querySelector('#input-ingredients');
     const btnIngredients = document.querySelector('#btn-ingredients');
     const formIngredients = document.querySelector(`#form-ingredients`);
@@ -18,49 +17,64 @@ const comboboxListenerIngredients = (recipes, arrSearchValues, arrAllRecipes) =>
     inputIngredients.addEventListener('keyup', (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
+        const tagSize = arrSearchValues.length;
 
-        if ((currentValueSize >= 3) || (currentValueSize < 3 && arrSearchValues.length > 0)) {
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
+        if ((currentValueSize >= 3) || (currentValueSize < 3 && tagSize > 0)) {
+            const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes);
             const filteredIngredients = [];
             for (let i = 0; i < arrAllIngredients.length; i++) {
-                const result = cleanValue(arrAllIngredients[i]).includes(cleanValue(searchValue));    
+                const result = cleanValue(arrAllIngredients[i]).includes(cleanValue(searchValue));
                 if (result) {
-                   filteredIngredients.push(arrAllIngredients[i]);
+                    filteredIngredients.push(arrAllIngredients[i]);
                 }
             }
-            displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes);
+            displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues);
         } else {
-            displayIngredients(recipes, arrSearchValues, arrAllRecipes);
+            displayIngredients(recipes, arrSearchValues);
         }
     });
 
-    // click global listener to refresh filtered Dropdown list if the user begin to write a search but click outside the current dropdown. Then  this reset the list with the current ingredients before click event.
+    // click global listener aim to refresh filtered Dropdown list if the user begin to write a search but click outside the current dropdown. Then  reset the list with the current ingredients before click event.
     document.addEventListener('click', function (event) {
         const isClickInside = formIngredients.contains(event.target);
-        
+
         if (!isClickInside) {
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
+            const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
             const arrAllIngredients = cleanValueArrIngredients(filteredRecipes);
             const filteredIngredients = arrAllIngredients;
-            displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues, arrAllRecipes);
+            displaySearchBarCheckIngredients(filteredIngredients, arrSearchValues);
         }
     });
 
-    // input Keydown Enter listener which begins at 3 letters - create a tag create - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox
+    // input Keydown Enter listener which begins at 3 letters - if no duplicate, create a tag - refresh the global state keeper "arrSearchValues" - refresh the array of current recipes - display all filtered Elements & close the combobox : reset input value 
     inputIngredients.addEventListener('keydown', (e) => {
         const searchValue = cleanValue(e.target.value);
         const currentValueSize = e.target.value.length;
+        const arrSearchValuesSize = arrSearchValues.length;
 
-        if (((e.key || e.code) === ('Enter' || 13)) && (currentValueSize >= 3)) {
+        if ((e.key || e.code) === ('Enter' || 13)) {
             e.preventDefault();
-            createTag(searchValue, 'ingredient', arrSearchValues, arrAllRecipes);
-            refreshArrSearchValues(searchValue, 'ingredient', arrSearchValues);
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
-            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
-            document.querySelector('#form-ingredients').reset();
-
-            comboboxToggle().closeCombobox('ingredients');
+            if (currentValueSize >= 3) {
+                let duplicateName;
+                for (let i = 0; i < arrSearchValuesSize; i++) {
+                    if (arrSearchValues[i].name === searchValue) {
+                        duplicateName = true;
+                        break;
+                    }
+                }
+                if (!duplicateName) {
+                    createTag(searchValue, 'ingredient', arrSearchValues);
+                    refreshArrSearchValues(searchValue, 'ingredient', arrSearchValues);
+                    const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
+                    displayAll(filteredRecipes, arrSearchValues);
+                    comboboxToggle().closeCombobox('ingredients');
+                } else {
+                    inputIngredients.value = '';
+                }
+            } else if (currentValueSize < 3) {
+                inputIngredients.value = '';
+            }
         }
     });
 }

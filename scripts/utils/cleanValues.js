@@ -3,7 +3,6 @@ const cleanValue = (val) => {
     if (typeof (val) === 'string') {
         return val.normalize('NFD').replace(/([\u0300-\u036f]|[^0-9a-zA-Z\s\.])/g, '').replace(/\s\s+/g, ' ').toLowerCase().trim();
     }
-
     if (Array.isArray(val)) {
         const arrVal = [];
         for (let i = 0; i < val.length; i++) {
@@ -32,6 +31,22 @@ const changeWordToSingular = (arr) => {
     return arrClean;
 };
 
+// Map an Array of word - check if word match a certain 'dictionary value' to harmonized it in order to remove it as duplicate lately) : (return word)
+const harmonizeSomeMisspellingWord = (arr) => {
+    const arrClean = [];
+    for (let i = 0; i < arr.length; i++) {
+        if (arr[i].match(/crème fraiche|crême fraîche|creme fraîche/ig)) {
+            arrClean.push('crème fraîche');
+        } else if (arr[i].match(/casserolle/ig)) {
+            arrClean.push('casserole');
+        } else {
+            arrClean.push(arr[i]);
+        }
+    }
+    //...(if necessary complete for other misspelling word)
+    return arrClean;
+}
+
 // Map the array of ingredients - lowercase the values, return them into an array of singular elements to remove duplicate & finally sort the values.
 const cleanValueArrIngredients = (arrRecipeItem) => {
     const arrClean = [];
@@ -43,12 +58,12 @@ const cleanValueArrIngredients = (arrRecipeItem) => {
     }
 
     const singularArr = changeWordToSingular(arrClean);
-
+    const harmonizeArr = harmonizeSomeMisspellingWord(singularArr);
 
     const uniqueArr = [];
-    for (let i = 0; i < singularArr.length; i++) {
-        if (uniqueArr.indexOf(singularArr[i]) === -1 && singularArr[i] !== '') {
-            uniqueArr.push(singularArr[i]);
+    for (let i = 0; i < harmonizeArr.length; i++) {
+        if (uniqueArr.indexOf(harmonizeArr[i]) === -1 && harmonizeArr[i] !== '') {
+            uniqueArr.push(harmonizeArr[i]);
         }       
     }
 
@@ -63,9 +78,6 @@ const cleanValueArrIngredients = (arrRecipeItem) => {
     }
 
     return sortArr;
-
-
-
 }
 
 // Map the array of appliances - lowercase the values, remove dot & duplicate and finally sort the values.
@@ -76,10 +88,12 @@ const cleanValueArrAppliances = (arrRecipeItem) => {
         arrClean.push(result);
     }
 
+    const harmonizeArr = harmonizeSomeMisspellingWord(arrClean);
+
     const uniqueArr = [];
-    for (let i = 0; i < arrClean.length; i++) {
-        if (uniqueArr.indexOf(arrClean[i]) === -1 && arrClean[i] !== '') {
-            uniqueArr.push(arrClean[i]);
+    for (let i = 0; i < harmonizeArr.length; i++) {
+        if (uniqueArr.indexOf(harmonizeArr[i]) === -1 && harmonizeArr[i] !== '') {
+            uniqueArr.push(harmonizeArr[i]);
         }
     }
 
@@ -94,7 +108,6 @@ const cleanValueArrAppliances = (arrRecipeItem) => {
     }
 
     return sortArr;
-
 }
 
 // Map the array of ustensils - lowercase the values, return them into an array to remove duplicate & finally sort the values.
@@ -107,10 +120,12 @@ const cleanValueArrUstensils = (arrRecipeItem) => {
         }
     }
 
+    const harmonizeArr = harmonizeSomeMisspellingWord(arrClean);
+
     const uniqueArr = [];
-    for (let i = 0; i < arrClean.length; i++) {
-        if (uniqueArr.indexOf(arrClean[i]) === -1 && arrClean[i] !== '') {
-            uniqueArr.push(arrClean[i]);
+    for (let i = 0; i < harmonizeArr.length; i++) {
+        if (uniqueArr.indexOf(harmonizeArr[i]) === -1 && harmonizeArr[i] !== '') {
+            uniqueArr.push(harmonizeArr[i]);
         }
     }
 
@@ -131,6 +146,7 @@ const cleanValueArrUstensils = (arrRecipeItem) => {
 export {
     cleanValue,
     changeWordToSingular,
+    harmonizeSomeMisspellingWord,
     cleanValueArrIngredients,
     cleanValueArrAppliances,
     cleanValueArrUstensils

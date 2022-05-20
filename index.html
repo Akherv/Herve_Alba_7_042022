@@ -8,7 +8,8 @@
     <meta name="description" content="Les petits plats, site de recettes">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto:wght@400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=Roboto:wght@400&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
@@ -28,7 +29,7 @@
     </header>
     <main>
         <!-- searchBar -->
-        <div id="search" class="container mt-2 mb-3 ">
+        <div id="search" class="container mt-2 mb-3">
             <form class="d-flex">
                 <input class="form-control searchBar " type="search" placeholder="Rechercher une recette"
                     aria-label="Search" autocomplete="off">
@@ -40,13 +41,14 @@
         <div id="tags" class="container d-flex flex-wrap mb-2">
         </div>
         <!-- filter -->
-        <div id="filters"
-            class="container d-grid gap-2 d-lg-flex justify-content-xl-start">
-            <div id="dropdown-input-ingredients" class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
+        <div id="filters" class="container d-grid gap-2 d-lg-flex justify-content-xl-start">
+            <div id="dropdown-input-ingredients"
+                class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
                 <form id="form-ingredients" class="d-flex">
-                    <input id="input-ingredients" class="input-custom" size="16" type="text" placeholder="Rechercher un ingrédient"  autocomplete="off">
-                    <button class="btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients" data-type="ingredients"
-                        aria-expanded="false">
+                    <input id="input-ingredients" class="input-custom" size="16" type="text"
+                        placeholder="Rechercher un ingrédient" autocomplete="off">
+                    <button class="btn btn-1 btn-custom dropdown-toggle" type="button" id="btn-ingredients"
+                        data-type="ingredients" aria-expanded="false">
                         Ingrédients
                         <img src="./assets/caret.svg" alt="">
                     </button>
@@ -55,11 +57,13 @@
                     <!-- ingredients -->
                 </ul>
             </div>
-            <div id="dropdown-input-appliances" class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
+            <div id="dropdown-input-appliances"
+                class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
                 <form id="form-appliances" class="d-flex">
-                    <input id="input-appliances" class="input-custom" size="16" type="text" placeholder="Rechercher un appareil"  autocomplete="off">
-                    <button class="btn btn-2 btn-custom dropdown-toggle" type="button" id="btn-appliances" data-type="appliances"
-                        aria-expanded="false">
+                    <input id="input-appliances" class="input-custom" size="16" type="text"
+                        placeholder="Rechercher un appareil" autocomplete="off">
+                    <button class="btn btn-2 btn-custom dropdown-toggle" type="button" id="btn-appliances"
+                        data-type="appliances" aria-expanded="false">
                         Appareils
                         <img src="./assets/caret.svg" alt="">
                     </button>
@@ -68,17 +72,19 @@
                     <!-- appliances -->
                 </ul>
             </div>
-            <div id="dropdown-input-ustensils" class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
+            <div id="dropdown-input-ustensils"
+                class="dropdown dropdown-input justify-content-center justify-content-xl-start mx-auto m-lg-0">
                 <form id="form-ustensils" class="d-flex">
-                    <input id="input-ustensils" class="input-custom" size="16" type="text" placeholder="Rechercher un ustensil">
-                    <button class="btn btn-3 btn-custom dropdown-toggle" type="button" id="btn-ustensils" data-type="ustensils"
-                        aria-expanded="false">
+                    <input id="input-ustensils" class="input-custom" size="16" type="text"
+                        placeholder="Rechercher un ustensil">
+                    <button class="btn btn-3 btn-custom dropdown-toggle" type="button" id="btn-ustensils"
+                        data-type="ustensils" aria-expanded="false">
                         Ustensils
                         <img src="./assets/caret.svg" alt="">
                     </button>
                 </form>
                 <ul id="ustensils-list" class="dropdown-menu" aria-labelledby="btn-ustensils">
-                       <!-- ustensils -->
+                    <!-- ustensils -->
                 </ul>
             </div>
         </div>

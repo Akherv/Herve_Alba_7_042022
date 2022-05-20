@@ -5,15 +5,14 @@ import comboboxListenerIngredients from '../listeners/combobox/comboboxListenerI
 import comboboxListenerAppliances from '../listeners/combobox/comboboxListenerAppliances.js';
 import comboboxListenerUstensils from '../listeners/combobox/comboboxListenerUstensils.js';
 
-// global arrays of recipes & the global state "arrSearchValues" (which will contains obj of the different type of search values)
-const arrAllRecipes = recipes;
+// global state "arrSearchValues" (which will contains obj of the different type of search values)
 const arrSearchValues = [];
 
 // Initialisation
 (function init() {
-    displayAll(recipes, arrSearchValues, arrAllRecipes);
-    searchBarListener(arrAllRecipes, arrSearchValues);
-    comboboxListenerIngredients(recipes, arrSearchValues, arrAllRecipes);
-    comboboxListenerAppliances(recipes, arrSearchValues, arrAllRecipes);
-    comboboxListenerUstensils(recipes, arrSearchValues, arrAllRecipes);
+    displayAll(recipes, arrSearchValues);
+    searchBarListener(arrSearchValues);
+    comboboxListenerIngredients(recipes, arrSearchValues);
+    comboboxListenerAppliances(recipes, arrSearchValues);
+    comboboxListenerUstensils(recipes, arrSearchValues);
 }());

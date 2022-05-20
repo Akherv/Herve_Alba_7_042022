@@ -3,8 +3,8 @@ const comboboxToggle = (type) => {
     // create the style of custom combobox
     const openCombobox = (type) => {
         const btnComboboxContainer = document.querySelector(`#dropdown-input-${type}`);
-        const input = document.querySelector(`#input-${type}`);
         const btn = document.querySelector(`#btn-${type}`);
+        const input = document.querySelector(`#input-${type}`);
         const list = document.querySelector(`#${type}-list`);
 
         btnComboboxContainer.classList.add('container-input-show');
@@ -19,8 +19,8 @@ const comboboxToggle = (type) => {
     // remove the style of custom combobox
     const closeCombobox = (type) => {
         const btnComboboxContainer = document.querySelector(`#dropdown-input-${type}`);
-        const input = document.querySelector(`#input-${type}`);
         const btn = document.querySelector(`#btn-${type}`);
+        const input = document.querySelector(`#input-${type}`);
         const list = document.querySelector(`#${type}-list`);
         const form = document.querySelector(`#form-${type}`);
 
@@ -33,6 +33,7 @@ const comboboxToggle = (type) => {
         form.reset();
     }
 
+    // manage the opening toogle
     const toggleOpeningCombobox = () => {
         const btn = document.querySelector(`#btn-${type}`);
 
@@ -40,7 +41,7 @@ const comboboxToggle = (type) => {
             closeCombobox(type);
         } else {
             const allDropdown = document.querySelectorAll('.dropdown-toggle');
-            for (let i = 0; i < allDropdown.length; i++) { 
+            for (let i = 0; i < allDropdown.length; i++) {
                 if (allDropdown[i].classList.contains('btn-input-show')) {
                     const otherType = allDropdown[i].dataset.type;
                     closeCombobox(otherType);
@@ -56,7 +57,6 @@ const comboboxToggle = (type) => {
 
         document.addEventListener('click', function (event) {
             const isClickInside = insideEl.contains(event.target);
-         
             if (!isClickInside) {
                 closeCombobox(type);
             }

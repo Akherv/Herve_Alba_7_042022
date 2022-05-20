@@ -1,4 +1,4 @@
-import { cleanValue } from '../utils/cleanValues.js';
+import { cleanValue, harmonizeSomeMisspellingWord  } from '../utils/cleanValues.js';
 import { arrTagsByType } from '../factories/tag-factory.js';
 
 // According to value type & check if of all values of the same type match their individual condition
@@ -17,10 +17,11 @@ const checkIndividualConditions = (recipe, arrSearchValues) => {
     );
 }
 
+// check if all val of an array are included into another array
 const checkIfAllValMatch = (val, arrToCheck) => {
 
     const everyCustom = (val, someCustom, arrToCheck) => {
-        for (let i = 0; i < val.length; i ++) {
+        for (let i = 0; i < val.length; i++) {
             const value = val[i];
             if (!someCustom(value, arrToCheck)) {
                 return false;
@@ -28,9 +29,9 @@ const checkIfAllValMatch = (val, arrToCheck) => {
         }
         return true;
     }
-    
+
     const someCustom = (value, arrToCheck) => {
-        for (let i = 0; i < arrToCheck.length; i ++) {
+        for (let i = 0; i < arrToCheck.length; i++) {
             const el = arrToCheck[i];
             if (el.indexOf(value) !== -1) {
                 return true;
@@ -38,7 +39,7 @@ const checkIfAllValMatch = (val, arrToCheck) => {
         }
         return false;
     }
-    
+
     return everyCustom(val, someCustom, arrToCheck)
 }
 
@@ -71,21 +72,21 @@ const ingredientsCondition = (val, recipe) => {
         const result = recipe.ingredients[i].ingredient;
         recipeIngredients.push(result);
     }
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeIngredients));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeIngredients)));
 }
 
 // appliances condition
 const appliancesCondition = (val, recipe) => {
     const currentValue = val;
     const recipeAppliance = recipe.appliance.split();
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeAppliance));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeAppliance)));
 }
 
 // ustensils condition
 const ustensilsCondition = (val, recipe) => {
     const currentValue = val;
     const recipeUstensils = recipe.ustensils;
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeUstensils));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeUstensils)));
 }
 
 // default condition
