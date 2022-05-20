@@ -1,16 +1,17 @@
 import { refreshArrFilteredRecipes } from '../searchAlgos/refreshAll.js';
+import recipes from '../../data/recipes.js';
 import displayAll from '../display/displayAll.js';
 
 // filter the global state keeper "arrSearchValues" and return an array of all values of the same seeking type
 const arrTagsByType = (arrSearchValues, type) => {
-    const arrTag = arrSearchValues.filter(el => el.type === type)
-    const arrTagElName = arrTag.map(el => el.name)
-    return arrTagElName
+    const arrTag = arrSearchValues.filter(el => el.type === type);
+    return arrTag.map(el => el.name);
 }
 
-// according to the searchValue & type, create a custom tag & then attach a remove tag listener to it
-const createTag = (searchValue, type, arrSearchValues, arrAllRecipes) => {
+// according to the searchValue & type, check if empty || duplicate then if not, create a custom tag & then attach a remove tag listener to it
+const createTag = (searchValue, type, arrSearchValues) => {
     const tagSection = document.querySelector('#tags');
+    const duplicateName = arrSearchValues.some((el) => el.name.includes(searchValue) && el.type.includes(type));
 
     const tag = document.createElement('li');
     tag.classList.add('tag')
@@ -28,32 +29,35 @@ const createTag = (searchValue, type, arrSearchValues, arrAllRecipes) => {
             tag.classList.add('default');
             break;
     }
-    if (searchValue !== '') {
+    if (searchValue !== '' && !duplicateName) {
         tag.textContent = searchValue;
         tagSection.appendChild(tag);
-        attachTagRemoveListener(tag, arrSearchValues, arrAllRecipes);
+        attachTagRemoveListener(tag, arrSearchValues);
     }
 }
 
 // create a tag listener which remove on click the selected tag - (remove the value from the global state keeper "arrSearchValues"  - refresh the array of current Recipes & display all Elements) : reset "arrSearchValues" & display all the recipes
-const attachTagRemoveListener = (tag, arrSearchValues, arrAllRecipes) => {
+const attachTagRemoveListener = (tag, arrSearchValues) => {
     const tagSection = document.querySelector('#tags');
+
     tag.addEventListener('click', (e) => {
         tag.remove();
+        const tagSectionChildrenSize = tagSection.children.length;
+        const searchValue = e.target.textContent;
 
-        if (tagSection.children.length >= 0) {
-                arrSearchValues.forEach((el, idx) => {
-                        if (el.name === e.target.textContent) {
-                            arrSearchValues.splice(idx, 1);
-                        }
-                    })
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
-            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
+        if (tagSectionChildrenSize >= 0) {
+            arrSearchValues.forEach((el, idx) => {
+                if (el.name === searchValue) {
+                    arrSearchValues.splice(idx, 1);
+                }
+            });
+            const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
+            displayAll(filteredRecipes, arrSearchValues);
         } else {
             arrSearchValues = [];
-            displayAll(arrAllRecipes, arrSearchValues,arrAllRecipes);
+            displayAll(recipes, arrSearchValues);
         }
-    })
+    });
 }
 
 export {

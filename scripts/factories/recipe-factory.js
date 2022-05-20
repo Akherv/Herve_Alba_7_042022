@@ -1,21 +1,15 @@
 function recipeFactory(datas) {
 
     function getIngredient() {
-        return datas.map((el) => {
-            return `<li class="ingredient-tag">${el}</li>`;
-        }).join('');
+        return datas.map((el) => `<li class="ingredient-tag">${el}</li>`).join('');
     }
 
     function getAppliance() {
-        return datas.map((el) => {
-            return `<li class="appliance-tag">${el}</li>`;
-        }).join('');
+        return datas.map((el) => `<li class="appliance-tag">${el}</li>`).join('');
     }
 
     function getUstensil() {
-        return datas.map((el) => {
-            return `<li class="ustensil-tag">${el}</li>`;
-        }).join('');
+        return datas.map((el) => `<li class="ustensil-tag">${el}</li>`).join('');
     }
 
     function getArticle() {
@@ -31,7 +25,9 @@ function recipeFactory(datas) {
             `
                 <li class="article-container col-md">
                     <article class="card shadow-sm p-0 border-0 mx-auto mb-5" data-id=${id}>
-                            <img class="card-img-top" src="#" alt=" ">
+                            <picture class="card-img-top">
+                                <img src="#" alt="" onerror="this.style.display='none'">
+                            </picture>
                         <div class="card-body p-0">
                             <header class="d-flex flex-column justify-content-between m-3">
                                 <h2 class="card-title mb-2">${name}</h2>

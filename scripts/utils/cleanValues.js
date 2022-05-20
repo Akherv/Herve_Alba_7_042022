@@ -12,7 +12,7 @@ const cleanValue = (val) => {
 const changeWordToSingular = (arr) => {
     return arr.map((word) => {
         if (/[a-z]*s$/.test(word)) {
-            const singularWord = word.replace(/s$/, '')
+            const singularWord = word.replace(/s$/, '');
             if (arr.includes(singularWord)) {
                 return singularWord;
             } else {
@@ -21,43 +21,47 @@ const changeWordToSingular = (arr) => {
         } else {
             return word;
         }
-    })
+    });
 };
 
-// Map the array of ingredients - lowercase the values, return them into an array of singular elements to remove duplicate & finally sort the values.
-const cleanValueArrIngredients = (arrRecipeItem) => {
-    let arrClean = arrRecipeItem.flatMap((recipe) => {
-        const res = recipe.ingredients.flatMap(el => {
-            return el.ingredient.toLowerCase();
-        });
-        return [...[], ...res];
+// Map an Array of word - check if word match a certain 'dictionary value' to harmonized it in order to remove it as duplicate lately) : (return word)
+const harmonizeSomeMisspellingWord = (arr) => {
+    return arr.map((word) => {
+        if (word.match(/crème fraiche|crême fraîche|creme fraîche/ig)) {
+            return 'crème fraîche';
+        }
+        if (word.match(/casserolle/ig)) {
+            return 'casserole';
+        }
+        return word
+        //...(if necessary complete for other misspelling word)
     });
-    return [...new Set(changeWordToSingular(arrClean))].sort();
+}
+
+// Map the array of ingredients - lowercase the values, return them into an array of singular elements, then harmonize misspelling word in order to remove duplicate & finally sort the values.
+const cleanValueArrIngredients = (arrRecipeItem) => {
+    let arrClean = arrRecipeItem.flatMap((recipe) => recipe.ingredients.map(el => el.ingredient.toLowerCase()));
+    const finalArrClean = changeWordToSingular(arrClean)
+    return [...new Set(harmonizeSomeMisspellingWord(finalArrClean))].sort();
 }
 
 // Map the array of appliances - lowercase the values, remove dot & duplicate and finally sort the values.
 const cleanValueArrAppliances = (arrRecipeItem) => {
-    let arrClean = arrRecipeItem.map((recipe) => {
-        return recipe.appliance.toLowerCase().replace(/([\.])/g, '');
-    });
-    return [...new Set(arrClean)].sort();
+    let arrClean = arrRecipeItem.map((recipe) => recipe.appliance.toLowerCase().replace(/([\.])/g, ''));
+    return [...new Set(harmonizeSomeMisspellingWord(arrClean))].sort();
 }
 
 // Map the array of ustensils - lowercase the values, return them into an array to remove duplicate & finally sort the values.
 const cleanValueArrUstensils = (arrRecipeItem) => {
-    let arrClean = arrRecipeItem.flatMap((recipe) => {
-        const res = recipe.ustensils.flatMap(el => {
-            return el.toLowerCase();
-        });
-        return [...[], ...res];
-    });
-    return [...new Set(arrClean)].sort();
+    let arrClean = arrRecipeItem.flatMap((recipe) => recipe.ustensils.map(el => el.toLowerCase()));
+    return [...new Set(harmonizeSomeMisspellingWord(arrClean))].sort();
 }
 
 
 export {
     cleanValue,
     changeWordToSingular,
+    harmonizeSomeMisspellingWord,
     cleanValueArrIngredients,
     cleanValueArrAppliances,
     cleanValueArrUstensils

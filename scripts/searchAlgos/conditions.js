@@ -1,4 +1,4 @@
-import { cleanValue } from '../utils/cleanValues.js';
+import { cleanValue, harmonizeSomeMisspellingWord } from '../utils/cleanValues.js';
 import { arrTagsByType } from '../factories/tag-factory.js';
 
 // According to value type & check if of all values of the same type match their individual condition
@@ -41,21 +41,21 @@ const searchbarCondition = (val, recipe) => {
 const ingredientsCondition = (val, recipe) => {
     const currentValue = val;
     const recipeIngredients = recipe.ingredients.flatMap(ingredient => ingredient.ingredient);
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeIngredients));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeIngredients)));
 }
 
 // appliances condition
 const appliancesCondition = (val, recipe) => {
     const currentValue = val;
     const recipeAppliance = recipe.appliance.split();
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeAppliance));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeAppliance)));
 }
 
 // ustensils condition
 const ustensilsCondition = (val, recipe) => {
     const currentValue = val;
     const recipeUstensils = recipe.ustensils;
-    return checkIfAllValMatch(cleanValue(currentValue), cleanValue(recipeUstensils));
+    return checkIfAllValMatch(harmonizeSomeMisspellingWord(cleanValue(currentValue)), harmonizeSomeMisspellingWord(cleanValue(recipeUstensils)));
 }
 
 // default condition

@@ -1,16 +1,17 @@
 import { cleanValueArrAppliances } from '../utils/cleanValues.js';
-import recipeFactory from '../factories/recipe-factory.js';
 import { createTag } from '../factories/tag-factory.js';
 import { refreshArrSearchValues } from '../searchAlgos/refreshAll.js';
 import { refreshArrFilteredRecipes } from '../searchAlgos/refreshAll.js';
+import recipeFactory from '../factories/recipe-factory.js';
 import displayAll from './displayAll.js';
 import comboboxToggle from './../listeners/combobox/comboboxToggle.js';
 
 // If there are recipes in the array of current recipes ? (clean the appliances values, display them into the appliance list & attach a tag listener to them) : (display "Aucun appareil")
-const displayAppliances = (currentRecipes, arrSearchValues, arrAllRecipes) => {
+const displayAppliances = (currentRecipes, arrSearchValues) => {
     const appliancesList = document.querySelector('#appliances-list');
+    const currentRecipesSize = currentRecipes.length;
 
-    if (currentRecipes.length > 0) {
+    if (currentRecipesSize > 0) {
         const arrAppliances = cleanValueArrAppliances(currentRecipes);
         const htmlString = recipeFactory(arrAppliances).getAppliance();
         appliancesList.innerHTML = htmlString;
@@ -18,36 +19,37 @@ const displayAppliances = (currentRecipes, arrSearchValues, arrAllRecipes) => {
         appliancesList.innerHTML = `<li class="no-match">Aucun appareil</li>`;
     }
 
-    attachCreateAppliancesTagListener(arrSearchValues, arrAllRecipes);
+    attachCreateAppliancesTagListener(arrSearchValues);
 }
 
 // If there are filtered appliances ? (display them into the appliances list & attach a tag listener to them) : (display "Aucun appareil")
-const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues, arrAllRecipes) => {
+const displaySearchBarCheckAppliances = (filteredAppliances, arrSearchValues) => {
     const appliancesList = document.querySelector('#appliances-list');
+    const filteredAppliancesSize = filteredAppliances.length;
 
-    if (filteredAppliances.length > 0) {
+    if (filteredAppliancesSize > 0) {
         const htmlString = recipeFactory(filteredAppliances).getAppliance();
         appliancesList.innerHTML = htmlString;
     } else {
         appliancesList.innerHTML = `<li class="no-match">Aucun appareil</li>`;
     }
 
-    attachCreateAppliancesTagListener(arrSearchValues, arrAllRecipes);
+    attachCreateAppliancesTagListener(arrSearchValues);
 }
 
 // create a tag listener which fire on click the creation of a appliance tag - refresh the global state keeper "arrSearchValues" - refresh the array of current Recipes & display all Elements
-const attachCreateAppliancesTagListener = (arrSearchValues, arrAllRecipes) => {
+const attachCreateAppliancesTagListener = (arrSearchValues) => {
     document.querySelectorAll('.appliance-tag').forEach((el) => {
         el.addEventListener('click', (e) => {
             const searchValue = e.target.textContent;
 
-            createTag(searchValue, 'appliance', arrSearchValues, arrAllRecipes);
+            createTag(searchValue, 'appliance', arrSearchValues);
             refreshArrSearchValues(searchValue, 'appliance', arrSearchValues);
-            const filteredRecipes = refreshArrFilteredRecipes(arrAllRecipes, arrSearchValues);
-            displayAll(filteredRecipes, arrSearchValues, arrAllRecipes);
+            const filteredRecipes = refreshArrFilteredRecipes(arrSearchValues);
+            displayAll(filteredRecipes, arrSearchValues);
 
             comboboxToggle().closeCombobox('appliances');
-        })
+        });
     });
 }
 

@@ -5,7 +5,7 @@ const createSearchValuesObj = (searchValue, type) => {
             this.name = name;
         }
     }
-    
+
     return (
         type === 'searchBar' ?
         new searchObj('searchBar', searchValue) :
